@@ -114,6 +114,81 @@
     transition: all 0.2s;
   }
   .explore-close:hover { color: var(--cream); }
+
+  /* ── Resources modal tabs ── */
+  .res-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0 20px;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .res-tab {
+    flex: 1;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--light);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+  .res-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .res-panel {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* ── Outreach table ── */
+  .outreach-table {
+    padding: 4px 0 8px;
+  }
+  .outreach-row {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .outreach-tribe {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--cream);
+    margin-bottom: 3px;
+  }
+  .outreach-dept {
+    font-size: 12px;
+    color: var(--light);
+    margin-bottom: 6px;
+  }
+  .outreach-phone {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gold);
+    text-decoration: none;
+    margin-bottom: 5px;
+    border-bottom: 1px dashed rgba(212,168,67,0.5);
+  }
+  .outreach-phone:active { opacity: 0.7; }
+  .outreach-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.4;
+  }
+
+  /* Make the modal sheet a flex column so tab panels scroll inside it */
+  .modal-sheet {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .modal-sheet .modal-close { flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -415,39 +490,114 @@
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">📚 Resources</div>
-    <div class="modal-subtitle">Explore these materials to deepen your understanding of ICWA.</div>
-    <a class="resource-link" href="https://notebooklm.google.com/notebook/f80e477f-df76-4212-a3fa-c76956ee834d" target="_blank" rel="noopener noreferrer">
-      <div class="resource-icon">🗒️</div>
-      <div class="resource-info">
-        <div class="resource-name">ICWA Notebook</div>
-        <div class="resource-desc">Curated reference materials and notes on ICWA law and practice.</div>
+
+    <!-- Tab bar -->
+    <div class="res-tabs">
+      <button class="res-tab active" id="tab-resources" onclick="switchResTab('resources')">References</button>
+      <button class="res-tab" id="tab-outreach" onclick="switchResTab('outreach')">Outreach</button>
+    </div>
+
+    <!-- ── References panel ── -->
+    <div id="res-panel-resources" class="res-panel">
+      <div class="modal-subtitle" style="padding:0 20px 10px;">Explore these materials to deepen your understanding of ICWA.</div>
+      <a class="resource-link" href="https://notebooklm.google.com/notebook/f80e477f-df76-4212-a3fa-c76956ee834d" target="_blank" rel="noopener noreferrer">
+        <div class="resource-icon">🗒️</div>
+        <div class="resource-info">
+          <div class="resource-name">ICWA Notebook</div>
+          <div class="resource-desc">Curated reference materials and notes on ICWA law and practice.</div>
+        </div>
+        <div class="resource-arrow">↗</div>
+      </a>
+      <a class="resource-link" href="https://turtletalk.blog/?s=ICWA" target="_blank" rel="noopener noreferrer">
+        <div class="resource-icon">🐢</div>
+        <div class="resource-info">
+          <div class="resource-name">Turtle Talk Blog — ICWA</div>
+          <div class="resource-desc">Legal analysis, news, and commentary on Indian law including ICWA from leading Tribal law scholars.</div>
+        </div>
+        <div class="resource-arrow">↗</div>
+      </a>
+      <a class="resource-link" href="https://www.supremecourt.gov/opinions/22pdf/21-376_7l48.pdf" target="_blank" rel="noopener noreferrer">
+        <div class="resource-icon">⚖️</div>
+        <div class="resource-info">
+          <div class="resource-name">Haaland v. Brackeen — Supreme Court Opinion</div>
+          <div class="resource-desc">The 2023 Supreme Court ruling upholding ICWA's constitutionality in a landmark decision for Tribal sovereignty.</div>
+        </div>
+        <div class="resource-arrow">↗</div>
+      </a>
+      <a class="resource-link" href="https://narf.org/nill/documents/icwa/state/montana/ag/1991.html" target="_blank" rel="noopener noreferrer">
+        <div class="resource-icon">🏔️</div>
+        <div class="resource-info">
+          <div class="resource-name">Montana AG Opinion on ICWA (1991)</div>
+          <div class="resource-desc">Montana Attorney General opinion addressing ICWA's application and state obligations under the Act.</div>
+        </div>
+        <div class="resource-arrow">↗</div>
+      </a>
+    </div>
+
+    <!-- ── Outreach panel ── -->
+    <div id="res-panel-outreach" class="res-panel" style="display:none;">
+      <div class="modal-subtitle" style="padding:0 20px 12px;">Montana Tribal ICWA contacts. Tap a phone number to call.</div>
+      <div class="outreach-table">
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Blackfeet Nation</div>
+          <div class="outreach-dept">Child &amp; Family Services Division</div>
+          <a class="outreach-phone" href="tel:4063385171">(406) 338-5171</a>
+          <div class="outreach-note">P.O. Box 588, Browning — Old Tribal Court Bldg</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Chippewa Cree Tribe (Rocky Boy's)</div>
+          <div class="outreach-dept">Montana Human Services</div>
+          <a class="outreach-phone" href="tel:4063954176">(406) 395-4176</a>
+          <div class="outreach-note">31 Agency Square, Box Elder</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Confederated Salish &amp; Kootenai Tribes (CSKT)</div>
+          <div class="outreach-dept">Tribal Social Services Dept.</div>
+          <a class="outreach-phone" href="tel:4066752700">(406) 675-2700 ext. 1214</a>
+          <div class="outreach-note">P.O. Box 278, Pablo</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Crow Nation</div>
+          <div class="outreach-dept">Apsaalooke Social &amp; Family Services</div>
+          <a class="outreach-phone" href="tel:4066384202">(406) 638-4202</a>
+          <div class="outreach-note">P.O. Box 1060, Crow Agency</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Fort Belknap Indian Community</div>
+          <div class="outreach-dept">Social Services — ICWA Program</div>
+          <a class="outreach-phone" href="tel:4063538370">(406) 353-8370</a>
+          <div class="outreach-note">656 Agency Main St., Harlem</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Fort Peck (Assiniboine &amp; Sioux)</div>
+          <div class="outreach-dept">Ft. Peck Tribal Court – Indian Child Welfare</div>
+          <a class="outreach-phone" href="tel:4067682402">(406) 768-2402</a>
+          <div class="outreach-note">P.O. Box 1072, Poplar</div>
+        </div>
+
+        <div class="outreach-row">
+          <div class="outreach-tribe">Little Shell Tribe of Chippewa Indians</div>
+          <div class="outreach-dept">Tribal Headquarters</div>
+          <a class="outreach-phone" href="tel:4063152400">(406) 315-2400</a>
+          <div class="outreach-note">511 Central Ave W, Great Falls — no dedicated reservation office; members dispersed statewide</div>
+        </div>
+
+        <div class="outreach-row" style="border-bottom:none;">
+          <div class="outreach-tribe">Northern Cheyenne Tribe</div>
+          <div class="outreach-dept">Human Services</div>
+          <a class="outreach-phone" href="tel:4064774828">(406) 477-4828</a>
+          <div class="outreach-note">P.O. Box 128, Lame Deer</div>
+        </div>
+
       </div>
-      <div class="resource-arrow">↗</div>
-    </a>
-    <a class="resource-link" href="https://turtletalk.blog/?s=ICWA" target="_blank" rel="noopener noreferrer">
-      <div class="resource-icon">🐢</div>
-      <div class="resource-info">
-        <div class="resource-name">Turtle Talk Blog — ICWA</div>
-        <div class="resource-desc">Legal analysis, news, and commentary on Indian law including ICWA from leading Tribal law scholars.</div>
-      </div>
-      <div class="resource-arrow">↗</div>
-    </a>
-    <a class="resource-link" href="https://www.supremecourt.gov/opinions/22pdf/21-376_7l48.pdf" target="_blank" rel="noopener noreferrer">
-      <div class="resource-icon">⚖️</div>
-      <div class="resource-info">
-        <div class="resource-name">Haaland v. Brackeen — Supreme Court Opinion</div>
-        <div class="resource-desc">The 2023 Supreme Court ruling upholding ICWA's constitutionality in a landmark decision for Tribal sovereignty.</div>
-      </div>
-      <div class="resource-arrow">↗</div>
-    </a>
-    <a class="resource-link" href="https://narf.org/nill/documents/icwa/state/montana/ag/1991.html" target="_blank" rel="noopener noreferrer">
-      <div class="resource-icon">🏔️</div>
-      <div class="resource-info">
-        <div class="resource-name">Montana AG Opinion on ICWA (1991)</div>
-        <div class="resource-desc">Montana Attorney General opinion addressing ICWA's application and state obligations under the Act.</div>
-      </div>
-      <div class="resource-arrow">↗</div>
-    </a>
+    </div>
+
     <button class="modal-close" onclick="closeResources()">Close</button>
   </div>
 </div>
@@ -941,6 +1091,12 @@ function closeBadgePopup() { document.getElementById('badge-popup').classList.re
 
 // ══════════════════════ RESOURCES / RESET MODALS ══════════════════════
 function openResources() { document.getElementById('resources-modal').classList.add('show'); }
+function switchResTab(tab) {
+  ['resources','outreach'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('res-panel-' + t).style.display = t === tab ? '' : 'none';
+  });
+}
 function closeResources(event) {
   if (!event || event.target === document.getElementById('resources-modal'))
     document.getElementById('resources-modal').classList.remove('show');
