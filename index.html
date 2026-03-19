@@ -6,6 +6,115 @@
 <title>Walking With ICWA</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* Small supplement — resume prompt button row, not in style.css */
+  .resume-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+
+  /* Active Efforts special highlight — gold underline instead of blue */
+  .def-word-gold {
+    font-weight: 600;
+    color: var(--gold);
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(212,168,67,0.7);
+  }
+
+  /* Special "explore more" modal overlay */
+  .explore-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 400;
+    align-items: flex-end; justify-content: center;
+  }
+  .explore-overlay.show { display: flex; }
+  .explore-sheet {
+    background: #242018;
+    border-radius: 20px 20px 0 0;
+    border: 1px solid rgba(212,168,67,0.3);
+    border-bottom: none;
+    padding: 0 0 40px;
+    width: 100%; max-width: 480px;
+    max-height: 82vh;
+    display: flex; flex-direction: column;
+    animation: sheet-up 0.3s ease;
+  }
+  .explore-handle-row {
+    padding: 16px 20px 0;
+    display: flex; flex-direction: column; align-items: center;
+    flex-shrink: 0;
+  }
+  .explore-handle {
+    width: 40px; height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin-bottom: 14px;
+  }
+  .explore-header {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 0 0 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .explore-icon { font-size: 28px; }
+  .explore-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; color: var(--gold);
+  }
+  .explore-subtitle { font-size: 12px; color: var(--light); margin-top: 2px; }
+  .explore-body {
+    flex: 1; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding: 18px 20px 4px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  /* Analogy card */
+  .explore-analogy {
+    background: rgba(196,98,45,0.1);
+    border: 1px solid rgba(196,98,45,0.3);
+    border-left: 3px solid var(--clay);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .explore-analogy-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--clay); margin-bottom: 6px;
+  }
+  .explore-analogy-text {
+    font-size: 14px; color: var(--cream); line-height: 1.65;
+  }
+
+  /* Supplies checklist */
+  .explore-supplies {
+    background: rgba(92,122,92,0.1);
+    border: 1px solid rgba(92,122,92,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .explore-supplies-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--sage); margin-bottom: 10px;
+  }
+  .supply-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .supply-item:last-child { border-bottom: none; }
+  .supply-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .supply-info { flex: 1; }
+  .supply-name { font-size: 14px; font-weight: 600; color: var(--cream); margin-bottom: 2px; }
+  .supply-desc { font-size: 12px; color: var(--light); line-height: 1.45; }
+
+  /* Close button */
+  .explore-close {
+    margin: 10px 20px 0; padding: 13px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: var(--light); font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px; cursor: pointer; flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .explore-close:hover { color: var(--cream); }
+</style>
 </head>
 <body>
 
@@ -15,10 +124,10 @@
     <div class="welcome-badge-ring"><span>🪶</span></div>
     <div class="welcome-eyebrow">Indian Child Welfare Act</div>
     <h1 class="welcome-title">Walking With ICWA</h1>
-    <p class="welcome-subtitle">Learn the Indian Child Welfare Act through conversation, real scenarios, and hands-on exploration. This is for everyone: attorneys, social workers, tribal members, families, and anyone wanting to understand ICWA.</p>
+    <p class="welcome-subtitle">Learn the Indian Child Welfare Act through conversation, real scenarios, and hands-on exploration. This is for everyone: attorneys, social workers, Tribal members, families, and anyone wanting to understand ICWA.</p>
     <div class="welcome-note">
       <strong>A note before you begin</strong>
-      ICWA is a federal law, not a racial classification. It recognizes the political relationship between tribes and the federal government, and the right of tribes to protect their children and communities.
+      ICWA is a federal law, not a racial classification. It recognizes the political relationship between Tribes and the federal government, and the right of Tribes to protect their children and communities.
     </div>
     <button class="btn-primary" onclick="showScreen('screen-perception')">Get Started</button>
   </div>
@@ -126,7 +235,7 @@
           <div class="card-content">
             <div class="card-category" style="color:#80b080">Tribal Government</div>
             <div class="card-title">Tribe, Sovereignty and Notice</div>
-            <div class="card-desc">Tribal jurisdiction, sovereignty, the importance of notice, and working with tribes as partners.</div>
+            <div class="card-desc">Tribal jurisdiction, sovereignty, the importance of notice, and working with Tribes as partners.</div>
             <div class="card-progress-bar"><div class="card-progress-fill" id="prog-tribal" style="width:0%"></div></div>
           </div>
           <div class="card-status status-available" id="status-tribal">Start</div>
@@ -148,19 +257,19 @@
 
     <div class="section-label">Real Scenarios</div>
     <div class="category-cards">
-      <div class="category-card card-hypo" onclick="openHypo(0)">
+      <div class="category-card card-hypo" onclick="openSection('hypo0')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
             <div class="card-category" style="color:var(--clay)">Hypothetical 1</div>
             <div class="card-title">The Case of A.N.</div>
-            <div class="card-desc">A 7-year-old Blackfeet child in non-Native foster care for 12 months. Extended family has not been explored.</div>
+            <div class="card-desc">A 7-year-old Blackfeet Indian child in non-Indian foster care for 12 months. Extended family has not been explored.</div>
             <div class="hypo-tags"><span class="hypo-tag">Placement Preferences</span><span class="hypo-tag">Diligent Search</span><span class="hypo-tag">Tribal Consultation</span></div>
           </div>
           <div class="card-status status-available" id="status-hypo0">Start</div>
         </div>
       </div>
-      <div class="category-card card-hypo" onclick="openHypo(1)">
+      <div class="category-card card-hypo" onclick="openSection('hypo1')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
@@ -172,7 +281,7 @@
           <div class="card-status status-available" id="status-hypo1">Start</div>
         </div>
       </div>
-      <div class="category-card card-hypo" onclick="openHypo(2)">
+      <div class="category-card card-hypo" onclick="openSection('hypo2')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
@@ -277,7 +386,7 @@
     <div class="thankyou-content">
       <div class="thankyou-icon">🌱</div>
       <h2 class="thankyou-title">Keep Walking Forward</h2>
-      <p class="thankyou-text">ICWA exists to ensure that Native children remain connected to Native families and communities. Every person who learns these protections helps keep that promise alive.</p>
+      <p class="thankyou-text">ICWA exists to ensure that Indian children remain connected to Indian families and communities. Every person who learns these protections helps keep that promise alive.</p>
       <p class="thankyou-text" style="font-weight:600;">Thank you for taking the time to learn.</p>
       <p class="thankyou-text" style="font-size:12px;margin-top:16px;">from the University of Montana</p>
       <button class="btn-secondary" onclick="showScreen('screen-hub')" style="margin-top:20px;">Back to Home</button>
@@ -319,7 +428,23 @@
       <div class="resource-icon">🐢</div>
       <div class="resource-info">
         <div class="resource-name">Turtle Talk Blog — ICWA</div>
-        <div class="resource-desc">Legal analysis, news, and commentary on Indian law including ICWA from leading tribal law scholars.</div>
+        <div class="resource-desc">Legal analysis, news, and commentary on Indian law including ICWA from leading Tribal law scholars.</div>
+      </div>
+      <div class="resource-arrow">↗</div>
+    </a>
+    <a class="resource-link" href="https://www.supremecourt.gov/opinions/22pdf/21-376_7l48.pdf" target="_blank" rel="noopener noreferrer">
+      <div class="resource-icon">⚖️</div>
+      <div class="resource-info">
+        <div class="resource-name">Haaland v. Brackeen — Supreme Court Opinion</div>
+        <div class="resource-desc">The 2023 Supreme Court ruling upholding ICWA's constitutionality in a landmark decision for Tribal sovereignty.</div>
+      </div>
+      <div class="resource-arrow">↗</div>
+    </a>
+    <a class="resource-link" href="https://narf.org/nill/documents/icwa/state/montana/ag/1991.html" target="_blank" rel="noopener noreferrer">
+      <div class="resource-icon">🏔️</div>
+      <div class="resource-info">
+        <div class="resource-name">Montana AG Opinion on ICWA (1991)</div>
+        <div class="resource-desc">Montana Attorney General opinion addressing ICWA's application and state obligations under the Act.</div>
       </div>
       <div class="resource-arrow">↗</div>
     </a>
@@ -345,6 +470,82 @@
   <span id="def-tooltip-text"></span>
 </div>
 
+<!-- ════════════ ACTIVE EFFORTS — EXPLORE MORE MODAL ════════════ -->
+<div class="explore-overlay" id="explore-active-efforts" onclick="closeExploreModal(event)">
+  <div class="explore-sheet">
+    <div class="explore-handle-row">
+      <div class="explore-handle"></div>
+      <div class="explore-header">
+        <div class="explore-icon">🎯</div>
+        <div>
+          <div class="explore-title">Active Efforts</div>
+          <div class="explore-subtitle">Going beyond a checklist</div>
+        </div>
+      </div>
+    </div>
+    <div class="explore-body">
+
+      <div class="explore-analogy">
+        <div class="explore-analogy-label">The Hunting Analogy</div>
+        <div class="explore-analogy-text">
+          Think of Active Efforts like preparing for a hunting trip. You do not just hand someone a list of what they need and send them out the door. You make sure they actually have everything, and that it works.
+          <br><br>
+          If you are serious about the hunt, you do not show up without your supplies. And if someone in your group is missing theirs, you do not just say <em>"the store exists."</em> You help them get ready.
+          <br><br>
+          Active Efforts means the department shows up fully equipped, and helps the family get there too.
+        </div>
+      </div>
+
+      <div class="explore-supplies">
+        <div class="explore-supplies-label">Make Sure You Have Your Supplies</div>
+
+        <div class="supply-item">
+          <div class="supply-icon"></div>
+          <div class="supply-info">
+            <div class="supply-name">The Plan (Your Rifle)</div>
+            <div class="supply-desc">A culturally appropriate, individualized service plan, not a generic template. Know what you are aiming for and why.</div>
+          </div>
+        </div>
+
+        <div class="supply-item">
+          <div class="supply-icon"></div>
+          <div class="supply-info">
+            <div class="supply-name">The Case (Protecting the Tool)</div>
+            <div class="supply-desc">Documentation of every active effort made. Without a record, the effort may as well not exist in court. Protect your work, write it down.</div>
+          </div>
+        </div>
+
+        <div class="supply-item">
+          <div class="supply-icon"></div>
+          <div class="supply-info">
+            <div class="supply-name">Know the Territory</div>
+            <div class="supply-desc">Understand the Tribe's resources, culture, and family structure. You cannot help a family navigate terrain you have never looked at.</div>
+          </div>
+        </div>
+
+        <div class="supply-item">
+          <div class="supply-icon"></div>
+          <div class="supply-info">
+            <div class="supply-name">A Hunting Partner (The Tribe)</div>
+            <div class="supply-desc">Contact the Tribe early and keep them involved. They know the land. They know the family. Do not go out alone when you do not have to.</div>
+          </div>
+        </div>
+
+        <div class="supply-item">
+          <div class="supply-icon"></div>
+          <div class="supply-info">
+            <div class="supply-name">Timing</div>
+            <div class="supply-desc">Active Efforts must begin before removal, not after. Waiting until a child is already placed to start trying misses the whole point.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <button class="explore-close" onclick="closeExploreModal()">Close</button>
+  </div>
+</div>
+
 <script>
 // ══════════════════════ STATE ══════════════════════
 const state = {
@@ -355,41 +556,45 @@ const state = {
   currentStep: 0,
   dialogueHistory: [],
   results: [],
-  defLookupCount: 0
+  defLookupCount: 0,
+  // Per-section mid-session snapshots: sessions[key] = { step, results, dialogueHistory }
+  sessions: {}
 };
 
 // ══════════════════════ DEFINITIONS ══════════════════════
 const definitions = {
   'ICWA': 'The Indian Child Welfare Act, a federal law passed in 1978 that sets standards for removing Indian children from their families and placing them in foster or adoptive homes that reflect Indian cultural values.',
-  'Indian Child': 'Under ICWA, any unmarried person under 18 who is either a member of a federally recognized tribe, or eligible for membership and has a biological parent who is a member.',
-  'Indian Custodian': 'Any Indian person who has legal custody of an Indian child under tribal law or custom, or under state law. This can include grandparents, aunts, uncles, or other extended family.',
+  'Indian Child': 'Under ICWA, any unmarried person under 18 who is either a member of a federally recognized Tribe, or eligible for membership and has a biological parent who is a member.',
+  'Indian Custodian': 'Any Indian person who has legal custody of an Indian child under Tribal law or custom, or under state law. This can include grandparents, aunts, uncles, or other extended family.',
   'Active Efforts': 'Affirmative, active, thorough, and timely efforts to provide services and support designed to prevent the breakup of an Indian family. A higher standard than "reasonable efforts."',
-  'Placement Preferences': 'ICWA requires a specific order: (1) extended family, (2) foster home licensed by the tribe, (3) Indian foster home, (4) institution approved by the tribe.',
-  'Qualified Expert Witness': 'A person with specific knowledge of the tribe\'s culture and customs who must testify before a child can be placed in foster care or before parental rights can be terminated.',
+  'Placement Preferences': 'ICWA requires a specific order: (1) extended family, (2) foster home licensed by the Tribe, (3) Indian foster home, (4) institution approved by the Tribe.',
+  'Qualified Expert Witness': 'A person with specific knowledge of the Tribe\'s culture and customs who must testify before a child can be placed in foster care or before parental rights can be terminated.',
   'QEW': 'Qualified Expert Witness. Must testify before a child can be placed in foster care or before parental rights can be terminated.',
-  'Tribal Sovereignty': 'The right of tribes to govern themselves. Under ICWA, tribes have exclusive jurisdiction over Indian children who live on the reservation.',
-  'Transfer of Jurisdiction': 'Moving a case from state court to tribal court. Parents, the Indian custodian, or the tribe can request this transfer.',
+  'Tribal Sovereignty': 'The right of Tribes to govern themselves. Under ICWA, Tribes have exclusive jurisdiction over Indian children who live on the reservation.',
+  'Transfer of Jurisdiction': 'Moving a case from state court to Tribal court. Parents, the Indian custodian, or the Tribe can request this transfer.',
   'Termination of Parental Rights': 'A court order that permanently ends the legal parent-child relationship. Under ICWA, requires evidence beyond a reasonable doubt plus QEW testimony.',
   'TPR': 'Termination of Parental Rights. Requires the highest standard of proof: beyond a reasonable doubt.',
   'Foster Care Placement': 'Placing a child in a licensed home away from parents. Under ICWA, requires clear and convincing evidence plus QEW testimony.',
   'Clear and Convincing Evidence': 'A standard of proof higher than "more likely than not" but lower than "beyond a reasonable doubt." Required for foster care placement in ICWA cases.',
   'Beyond a Reasonable Doubt': 'The highest standard of proof in American law. Required for TPR in ICWA cases.',
-  'Diligent Search': 'Thorough efforts to find and contact extended family, tribal members, and other preferred placements before placing outside preferences.',
+  'Diligent Search': 'Thorough efforts to find and contact extended family, Tribal members, and other preferred placements before placing outside preferences.',
   'DN': 'Dependency and Neglect. The type of court case filed when the state believes a child is being abused or neglected.',
-  'ICWA Designated Agent': 'The person designated by a tribe to receive official ICWA notices.',
+  'ICWA Designated Agent': 'The person designated by a Tribe to receive official ICWA notices.',
   'Good Cause': 'The legal standard to justify placing a child outside ICWA placement preferences. Must be documented with specific reasons.',
-  'Concurrent Jurisdiction': 'When both state and tribal courts have authority to hear a case.',
+  'Concurrent Jurisdiction': 'When both state and Tribal courts have authority to hear a case.',
   'Exclusive Jurisdiction': 'When only one court has authority. Tribal courts have this for Indian children domiciled on a reservation.',
   'MICWA': 'Montana Indian Child Welfare Act. Montana\'s state law that mirrors and sometimes expands upon federal ICWA.',
-  'Intervene': 'The right of a tribe to formally join a state court case involving an Indian child at any point.',
-  'BIA': 'Bureau of Indian Affairs. Federal agency that receives ICWA notices and maintains tribal enrollment records.',
+  'Intervene': 'The right of a Tribe to formally join a state court case involving an Indian child at any point.',
+  'BIA': 'Bureau of Indian Affairs. Federal agency that receives ICWA notices and maintains Tribal enrollment records.',
   'GAL': 'Guardian ad Litem. A person appointed by the court to represent the best interests of a child.',
   'CASA': 'Court Appointed Special Advocate. A trained volunteer appointed to advocate for a child\'s best interests.',
   'Adjudication': 'The court process where a judge determines whether allegations (like abuse or neglect) have been proven.',
   'Disposition': 'After adjudication, the judge decides what services, placements, or actions are needed.',
   'Preponderance of Evidence': 'A standard of proof meaning "more likely than not." NOT sufficient for ICWA foster care placements.',
   'Respondent': 'The person (usually a parent) who must respond to allegations in a court case.',
-  'Petitioner': 'The party who files the case. In DN cases, usually the state or county child welfare department.'
+  'Petitioner': 'The party who files the case. In DN cases, usually the state or county child welfare department.',
+  'member': 'When a child\'s Tribal status is in question, the state court should seek information from the relevant Tribe(s) and respect their enrollment records and criteria. Tribal membership is a political classification — it is the Tribe\'s determination to make, not the court\'s.',
+  'eligible for membership': 'Tribes retain the power to define membership. Courts cannot override or re-define a Tribe\'s enrollment standards. If a child may be eligible, treat the case as an ICWA case and contact the Tribe to verify.'
 };
 
 // ══════════════════════ BADGES ══════════════════════
@@ -410,125 +615,126 @@ const allBadges = [
 
 // ══════════════════════ TIMELINE ══════════════════════
 const timelineEvents = [
-  { year: 'Pre-1800s', title: 'Tribal Nations Care for Their Own', desc: 'For thousands of years, tribal nations maintained their own systems for caring for children. Extended family and community played central roles in raising children.' },
-  { year: '1800s–1960s', title: 'Boarding School Era', desc: 'The U.S. government forcibly removed Native children from their families and sent them to boarding schools designed to eliminate Native languages, cultures, and identities.' },
-  { year: '1969–1974', title: 'Crisis Documented', desc: 'The Association on American Indian Affairs found that 25 to 35 percent of all Native children were being removed from their homes. Of those, 85 percent were placed outside their communities.' },
-  { year: '1974', title: 'Senate Hearings Begin', desc: 'The U.S. Senate held hearings on Indian child welfare. Tribal leaders testified about caseworkers who made removal decisions based on ignorance and bias.' },
-  { year: 'November 8, 1978', title: 'ICWA Becomes Law', desc: 'Congress passed the Indian Child Welfare Act, establishing minimum federal standards for state custody proceedings involving Native children. Tribal courts gained jurisdiction.' },
-  { year: '1991', title: 'Montana ICWA Enacted', desc: 'Montana adopted its own state ICWA, offering stronger protections in some areas and clarifying responsibilities of state agencies and courts.' },
-  { year: '2016', title: 'BIA Final Rule', desc: 'The Bureau of Indian Affairs issued comprehensive federal regulations (25 CFR Part 23), standardizing how ICWA must be implemented by states.' },
-  { year: '2018–2019', title: 'Constitutional Challenge', desc: 'In Brackeen v. Zinke, a federal judge struck down parts of ICWA. The Fifth Circuit reversed, finding ICWA is based on political classification, not race.' },
-  { year: 'June 2023', title: 'Supreme Court Upholds ICWA', desc: 'In Haaland v. Brackeen, the Supreme Court ruled 7-2 to uphold ICWA, confirming it is based on the political status of tribal members, not race.' },
-  { year: '2025', title: 'MICWA Extended', desc: 'Governor Gianforte signed a bill extending MICWA indefinitely, demonstrating bipartisan commitment to keeping Indian children connected to their families and cultures.' },
-  { year: 'Today', title: 'The Work Continues', desc: 'Native children are still removed at disproportionate rates. In Montana, Native children are about 9% of the child population but over a third of children in foster care.' }
+  { year: "Pre-1800's", title: 'Tribal Nations Care for Their Own', desc: 'For thousands of years, Tribal nations maintained their own systems for caring for Indian children. Extended family and community played central roles in raising children.' },
+  { year: "1800s–1960's", title: 'Boarding School Era', desc: 'The U.S. government forcibly removed Indian children from their families and sent them to boarding schools designed to eliminate Indian languages, cultures, and identities.' },
+  { year: "1969–1974", title: 'Crisis Documented', desc: 'The Association on American Indian Affairs found that 25 to 35 percent of all Indian children were being removed from their homes. Of those, 85 percent were placed outside their communities.' },
+  { year: "1974", title: 'Senate Hearings Begin', desc: 'The U.S. Senate held hearings on Indian child welfare. Tribal leaders testified about caseworkers who made removal decisions based on ignorance and bias.' },
+  { year: "November 8, 1978", title: 'ICWA Becomes Law', desc: 'Congress passed the Indian Child Welfare Act, establishing minimum federal standards for state custody proceedings involving Indian children. Tribal courts gained jurisdiction.' },
+  { year: "1990's", title: 'Early ICWA Protocols Established', desc: 'Montana AG Opinion No. 15 required full faith and credit to Tribal court judgments in Indian child custody proceedings and mandated qualified expert witness testimony before terminating parental rights.' },
+  { year: "1990's", title: 'Montana ICWA Enacted', desc: 'Montana adopted its own state ICWA, offering stronger protections in some areas and clarifying responsibilities of state agencies and courts.' },
+  { year: "2016", title: 'BIA Final Rule', desc: 'The Bureau of Indian Affairs issued comprehensive federal regulations (25 CFR Part 23), standardizing how ICWA must be implemented by states.' },
+  { year: "2018–2019", title: 'Constitutional Challenge', desc: 'In Brackeen v. Zinke, a federal judge struck down parts of ICWA. The Fifth Circuit reversed, finding ICWA is based on political classification, not race.' },
+  { year: "June 2023", title: 'Supreme Court Upholds ICWA', desc: 'In Haaland v. Brackeen, the Supreme Court ruled 7-2 to uphold ICWA, confirming it is based on the political status of Tribal members, not race.' },
+  { year: "2025", title: 'MICWA Extended', desc: 'Governor Gianforte signed a bill extending MICWA indefinitely, demonstrating bipartisan commitment to keeping Indian children connected to their families and cultures.' },
+  { year: "Today", title: 'The Work Continues', desc: 'Indian children are still removed at disproportionate rates. In Montana, Indian children are about 9% of the child population but over a third of children in foster care.' }
 ];
 
 // ══════════════════════ DIALOGUE CONTENT ══════════════════════
 const sectionDialogues = {
   courthouse: [
     { guide: "Welcome to the Courthouse. When a child might be in danger, the state can file a case in court. In ICWA cases, these are usually Dependency and Neglect cases, or DN cases. Do you know what kicks off an ICWA case in court?", choices: [
-      { text: "When a case involves an Indian child as defined by ICWA", correct: true, feedback: "That is right. An ICWA case begins when a child custody proceeding involves an Indian child — someone under 18 who is a member of a federally recognized tribe, or is eligible for membership and has a parent who is a member. This is a political classification based on tribal membership, not a racial one." },
-      { text: "When anyone with Native heritage is involved in a case", correct: false, feedback: "Not quite. ICWA does not apply based on heritage alone. It applies when the child is a member of a federally recognized tribe, or is eligible for membership and has a parent who is a member. This is a political classification reflecting the government-to-government relationship between tribes and the United States." },
-      { text: "Only when the tribe asks the court to apply it", correct: false, feedback: "Actually, the court has its own duty to determine if ICWA applies. Courts must ask about Native ancestry early in any child welfare case. ICWA applies whether or not the tribe has been involved yet." }
+      { text: "When a case involves an Indian child as defined by ICWA", correct: true, feedback: "That is right. An ICWA case begins when a child custody proceeding involves an Indian child — someone under 18 who is a member of a federally recognized Tribe, or is eligible for membership and has a parent who is a member. This is a political classification based on Tribal membership, not a racial one." },
+      { text: "When anyone with Native heritage is involved in a case", correct: false, feedback: "Not quite. ICWA does not apply based on heritage alone. It applies when the child is a member of a federally recognized Tribe, or is eligible for membership and has a parent who is a member. This is a political classification reflecting the government-to-government relationship between Tribes and the United States." },
+      { text: "Only when the Tribe asks the court to apply it", correct: false, feedback: "Actually, the court has its own duty to determine if ICWA applies. Courts must ask about Indian ancestry early in any child welfare case. ICWA applies whether or not the Tribe has been involved yet." }
     ]},
     { guide: "Good. There is someone in ICWA cases called a Qualified Expert Witness, or QEW. Why does the court need a QEW?", choices: [
-      { text: "To testify about the tribe's culture and whether keeping the child with the parent would cause harm", correct: true, feedback: "Exactly. A QEW must testify before a child can be placed in foster care or before parental rights can be terminated. The QEW has knowledge of the tribe's culture and customs and helps the court understand whether continued custody is likely to result in serious harm." },
-      { text: "To represent the child in court like a lawyer", correct: false, feedback: "That role belongs to a Guardian ad Litem (GAL). The QEW provides expert testimony about the tribe's cultural standards before the court can decide about foster care or ending parental rights." },
-      { text: "To make the final decision about where the child goes", correct: false, feedback: "The judge makes the final decision. But the QEW must testify before the court can order foster care or terminate parental rights. Their testimony helps the court understand the tribal context." }
+      { text: "To testify about the Tribe's culture and whether keeping the child with the parent would cause harm", correct: true, feedback: "Exactly. A QEW must testify before a child can be placed in foster care or before parental rights can be terminated. The QEW has knowledge of the Tribe's culture and customs and helps the court understand whether continued custody is likely to result in serious harm." },
+      { text: "To represent the child in court like a lawyer", correct: false, feedback: "That role belongs to a Guardian ad Litem (GAL). The QEW provides expert testimony about the Tribe's cultural standards before the court can decide about foster care or ending parental rights." },
+      { text: "To make the final decision about where the child goes", correct: false, feedback: "The judge makes the final decision. But the QEW must testify before the court can order foster care or terminate parental rights. Their testimony helps the court understand the Tribal context." }
     ]},
     { guide: "Let us talk about evidence standards. For foster care placement, the court needs 'clear and convincing evidence' plus QEW testimony. For termination of parental rights, it needs something even higher. What is the standard for TPR?", choices: [
       { text: "Beyond a reasonable doubt, the same standard used in criminal cases", correct: true, feedback: "Right. TPR under ICWA requires beyond a reasonable doubt — the highest standard in American law, the same used in criminal cases. Congress set this high bar because ending the parent-child relationship is one of the most serious actions a court can take." },
       { text: "Clear and convincing evidence, same as foster care", correct: false, feedback: "That is the standard for foster care, not TPR. For termination of parental rights, ICWA requires beyond a reasonable doubt — even higher. These higher bars exist to prevent unnecessary family separation." },
       { text: "Preponderance of the evidence, meaning more likely than not", correct: false, feedback: "Preponderance is the lowest standard and is not used for either foster care or TPR under ICWA. For foster care: clear and convincing evidence. For TPR: beyond a reasonable doubt." }
     ]},
-    { guide: "One important right is the tribe's ability to intervene. What does it mean when a tribe 'intervenes' in a case?", choices: [
-      { text: "The tribe formally joins the case as a party and can participate in all proceedings", correct: true, feedback: "Correct. When a tribe intervenes, it becomes a full party to the case — it can present evidence, call witnesses, file motions, and participate in hearings. Under ICWA, the tribe has the right to intervene at any point." },
-      { text: "The tribe takes over the case completely from the state", correct: false, feedback: "That is closer to 'transfer of jurisdiction,' a separate process. Intervention means the tribe joins as a party alongside other parties. Transfer of jurisdiction would move the entire case to tribal court." },
-      { text: "The tribe gives advice but cannot actually participate in hearings", correct: false, feedback: "Intervention is much stronger. When a tribe intervenes, it becomes a full legal party with the right to present evidence, cross-examine witnesses, file motions, and make arguments." }
+    { guide: "One important right is the Tribe's ability to intervene. What does it mean when a Tribe 'intervenes' in a case?", choices: [
+      { text: "The Tribe formally joins the case as a party and can participate in all proceedings", correct: true, feedback: "Correct. When a Tribe intervenes, it becomes a full party to the case — it can present evidence, call witnesses, file motions, and participate in hearings. Under ICWA, the Tribe has the right to intervene at any point." },
+      { text: "The Tribe takes over the case completely from the state", correct: false, feedback: "That is closer to 'transfer of jurisdiction,' a separate process. Intervention means the Tribe joins as a party alongside other parties. Transfer of jurisdiction would move the entire case to Tribal court." },
+      { text: "The Tribe gives advice but cannot actually participate in hearings", correct: false, feedback: "Intervention is much stronger. When a Tribe intervenes, it becomes a full legal party with the right to present evidence, cross-examine witnesses, file motions, and make arguments." }
     ]},
-    { guide: "A parent, Indian custodian, or the tribe can request a case be transferred from state court to tribal court. When can a state court deny this transfer?", choices: [
-      { text: "Only if a biological parent objects, if the tribal court declines, or if there is good cause", correct: true, feedback: "Right. The state court must transfer unless: (1) a biological parent objects, (2) the tribal court declines, or (3) there is good cause. The presumption is in favor of transfer, reflecting ICWA's recognition of tribal sovereignty." },
-      { text: "Whenever the state court thinks it would be better for the child", correct: false, feedback: "The state court cannot simply decide it would be better. ICWA creates a presumption in favor of transfer. The only exceptions are: parent objects, tribal court declines, or good cause exists." },
-      { text: "State courts can never deny a transfer request", correct: false, feedback: "There are three specific circumstances for denial: parent objects, tribal court declines, or good cause. But outside those three, the state court must transfer." }
+    { guide: "A parent, Indian custodian, or the Tribe can request a case be transferred from state court to Tribal court. When can a state court deny this transfer?", choices: [
+      { text: "Only if a biological parent objects, if the Tribal court declines, or if there is good cause", correct: true, feedback: "Right. The state court must transfer unless: (1) a biological parent objects, (2) the Tribal court declines, or (3) there is good cause. The presumption is in favor of transfer, reflecting ICWA's recognition of Tribal sovereignty." },
+      { text: "Whenever the state court thinks it would be better for the child", correct: false, feedback: "The state court cannot simply decide it would be better. ICWA creates a presumption in favor of transfer. The only exceptions are: parent objects, Tribal court declines, or good cause exists." },
+      { text: "State courts can never deny a transfer request", correct: false, feedback: "There are three specific circumstances for denial: parent objects, Tribal court declines, or good cause. But outside those three, the state court must transfer." }
     ]}
   ],
   tribal: [
     { guide: "Welcome to the Tribal Government section. ICWA is based on a political relationship, not a racial one. Why is this distinction so important?", choices: [
-      { text: "Because tribal membership is a political classification tied to sovereignty, like citizenship in a nation", correct: true, feedback: "Exactly. Tribes are sovereign nations with a government-to-government relationship with the United States. Tribal membership is a political classification, similar to citizenship. The Supreme Court confirmed this in Haaland v. Brackeen in 2023." },
-      { text: "Because it means ICWA only applies to some Native people", correct: false, feedback: "The fundamental point is about political status. Tribal membership is a political classification based on sovereignty, not race. The Supreme Court upheld this in 2023." },
+      { text: "Because Tribal membership is a political classification tied to sovereignty, like citizenship in a nation", correct: true, feedback: "Exactly. Tribes are sovereign nations with a government-to-government relationship with the United States. Tribal membership is a political classification, similar to citizenship. The Supreme Court confirmed this in Haaland v. Brackeen in 2023." },
+      { text: "Because it means ICWA only applies to some Indian people", correct: false, feedback: "The fundamental point is about political status. Tribal membership is a political classification based on sovereignty, not race. The Supreme Court upheld this in 2023." },
       { text: "I am not sure why it matters", correct: false, feedback: "This is one of the most important things to understand. Tribal membership is political, not racial. The Supreme Court confirmed this in 2023 when it upheld ICWA 7-2. Understanding this protects ICWA from constitutional challenges." }
     ]},
-    { guide: "Each tribe designates a specific person to receive ICWA notices — the ICWA Designated Agent. Why is proper notice to the tribe so critical?", choices: [
-      { text: "Because the tribe has a right to know about the case and participate in decisions about their children", correct: true, feedback: "Correct. Notice is one of ICWA's core protections. Without it, the tribe cannot intervene, request transfer, participate in placement decisions, or provide a QEW. If notice was not properly given, the entire proceeding can be invalidated." },
-      { text: "It is just a formality the court has to follow", correct: false, feedback: "Far more than a formality. Without proper notice, the tribe cannot exercise its rights. If notice was not given, a parent, custodian, or tribe can petition to invalidate the entire proceeding." },
-      { text: "So the tribe can provide financial support for the family", correct: false, feedback: "While tribes may provide support, the primary reason is legal. The tribe has sovereign rights in cases involving its children. Notice allows them to intervene, request transfer, and provide a QEW." }
+    { guide: "Each Tribe designates a specific person to receive ICWA notices — the ICWA Designated Agent. Why is proper notice to the Tribe so critical?", choices: [
+      { text: "Because the Tribe has a right to know about the case and participate in decisions about their children", correct: true, feedback: "Correct. Notice is one of ICWA's core protections. Without it, the Tribe cannot intervene, request transfer, participate in placement decisions, or provide a QEW. If notice was not properly given, the entire proceeding can be invalidated." },
+      { text: "It is just a formality the court has to follow", correct: false, feedback: "Far more than a formality. Without proper notice, the Tribe cannot exercise its rights. If notice was not given, a parent, custodian, or Tribe can petition to invalidate the entire proceeding." },
+      { text: "So the Tribe can provide financial support for the family", correct: false, feedback: "While Tribes may provide support, the primary reason is legal. The Tribe has sovereign rights in cases involving its children. Notice allows them to intervene, request transfer, and provide a QEW." }
     ]},
-    { guide: "When does a tribal court have exclusive jurisdiction — meaning the state court has no say?", choices: [
-      { text: "When the child lives on or is domiciled on the reservation, or is a ward of the tribal court", correct: true, feedback: "Right. In these situations, the state court cannot hear the case at all. This reflects the principle that tribes are best positioned to make decisions about their own children within their own territory." },
-      { text: "Tribal courts always have exclusive jurisdiction over Indian children", correct: false, feedback: "Not quite. Exclusive jurisdiction applies when the child lives on or is domiciled on the reservation, or is a ward of the tribal court. For off-reservation children, jurisdiction may be concurrent." },
-      { text: "Only when both parents are tribal members", correct: false, feedback: "Jurisdiction depends on where the child lives or is domiciled, not on both parents being members." }
+    { guide: "When does a Tribal court have exclusive jurisdiction — meaning the state court has no say?", choices: [
+      { text: "When the child lives on or is domiciled on the reservation, or is a ward of the Tribal court", correct: true, feedback: "Right. In these situations, the state court cannot hear the case at all. This reflects the principle that Tribes are best positioned to make decisions about their own Indian children within their own territory." },
+      { text: "Tribal courts always have exclusive jurisdiction over Indian children", correct: false, feedback: "Not quite. Exclusive jurisdiction applies when the child lives on or is domiciled on the reservation, or is a ward of the Tribal court. For off-reservation Indian children, jurisdiction may be concurrent." },
+      { text: "Only when both parents are Tribal members", correct: false, feedback: "Jurisdiction depends on where the child lives or is domiciled, not on both parents being members." }
     ]},
-    { guide: "Tribes can also establish their own placement preferences by tribal resolution. Why would a tribe do this?", choices: [
-      { text: "To reflect the tribe's own cultural values, family structures, and community standards", correct: true, feedback: "Exactly. ICWA allows tribes to establish different placement preferences by resolution. Each tribe has unique culture and family structures. This is tribal sovereignty in action." },
-      { text: "To make it harder for the state to place children", correct: false, feedback: "It is about reflecting the tribe's own cultural values. Each tribe knows its community best, and ICWA respects that knowledge." },
-      { text: "Tribes cannot change ICWA's placement preferences", correct: false, feedback: "Actually, Section 1915(c) specifically gives tribes this power. This is an important expression of tribal sovereignty." }
+    { guide: "Tribes can also establish their own placement preferences by Tribal resolution. Why would a Tribe do this?", choices: [
+      { text: "To reflect the Tribe's own cultural values, family structures, and community standards", correct: true, feedback: "Exactly. ICWA allows Tribes to establish different placement preferences by resolution. Each Tribe has unique culture and family structures. This is Tribal sovereignty in action." },
+      { text: "To make it harder for the state to place Indian children", correct: false, feedback: "It is about reflecting the Tribe's own cultural values. Each Tribe knows its community best, and ICWA respects that knowledge." },
+      { text: "Tribes cannot change ICWA's placement preferences", correct: false, feedback: "Actually, Section 1915(c) specifically gives Tribes this power. This is an important expression of Tribal sovereignty." }
     ]},
     { guide: "What is one of the biggest barriers to ICWA working the way it should?", choices: [
-      { text: "Poor communication and lack of relationship building between agencies and tribes", correct: true, feedback: "This is one of the most common issues. When departments and courts do not build relationships with tribal ICWA workers, things fall through the cracks. Building real, ongoing communication is one of the most effective things any professional can do." },
-      { text: "Tribes not wanting to participate in state cases", correct: false, feedback: "Tribes are deeply invested in cases involving their children. The bigger barrier is often on the state side: failing to send timely notices or not building needed relationships." },
+      { text: "Poor communication and lack of relationship building between agencies and Tribes", correct: true, feedback: "This is one of the most common issues. When departments and courts do not build relationships with Tribal ICWA workers, things fall through the cracks. Building real, ongoing communication is one of the most effective things any professional can do." },
+      { text: "Tribes not wanting to participate in state cases", correct: false, feedback: "Tribes are deeply invested in cases involving their Indian children. The bigger barrier is often on the state side: failing to send timely notices or not building needed relationships." },
       { text: "ICWA being too complicated to follow", correct: false, feedback: "ICWA's procedures are straightforward. The bigger challenge is building the relationships that make compliance natural." }
     ]}
   ],
   household: [
     { guide: "Welcome to the Household. ICWA requires 'active efforts' to keep Indian families together. How is this different from the 'reasonable efforts' used in non-ICWA cases?", choices: [
       { text: "Active efforts is a higher standard that requires hands-on help, not just making referrals", correct: true, feedback: "Correct. Active efforts goes beyond providing a list of services. It means actively helping the family: driving them to appointments, helping find housing, connecting with culturally relevant programs. The difference is between handing someone a map and walking with them." },
-      { text: "They are basically the same thing", correct: false, feedback: "They are not. Reasonable efforts generally means offering services and referrals. Active efforts is a higher bar — it means actively helping the family, not just pointing them toward resources." },
+      { text: "They are basically the same thing", correct: false, feedback: "They are not. Reasonable efforts generally means offering services and referrals. Active efforts is a higher bar — it means actively helping the Indian family, not just pointing them toward resources." },
       { text: "Active efforts means the family has to do more work", correct: false, feedback: "Actually the opposite. Active efforts places the greater responsibility on the department. The work falls on the system, not the family." }
     ]},
     { guide: "When an Indian child cannot stay with their parents, ICWA spells out placement preferences. For foster care, what is the preferred order?", choices: [
-      { text: "Extended family, then a tribal foster home, then an Indian foster home, then a tribally approved institution", correct: true, feedback: "That is the correct order. Each option must be considered in order before moving to the next." },
+      { text: "Extended family, then a Tribal foster home, then an Indian foster home, then a tribally approved institution", correct: true, feedback: "That is the correct order. Each option must be considered in order before moving to the next." },
       { text: "Whoever the court thinks is the best fit", correct: false, feedback: "ICWA does not leave placement up to general discretion. It establishes a specific order. The court can only deviate with documented good cause." },
-      { text: "The child's tribe first, then other Indian families, then extended family", correct: false, feedback: "Close, but extended family comes first. The correct order is: (1) extended family, (2) tribal foster home, (3) Indian foster home, (4) tribally approved institution." }
+      { text: "The child's Tribe first, then other Indian families, then extended family", correct: false, feedback: "Close, but extended family comes first. The correct order is: (1) extended family, (2) Tribal foster home, (3) Indian foster home, (4) tribally approved institution." }
     ]},
     { guide: "Before placing a child outside the preferences, the department must conduct a diligent search. What does that mean in practice?", choices: [
-      { text: "Thoroughly searching for extended family, tribal members, and other preferred placements and documenting every step", correct: true, feedback: "Right. A diligent search means making real, documented efforts to find family members and preferred placements. You cannot say preferred placements are unavailable if you never truly looked." },
-      { text: "Checking if the tribe has a list of foster homes available", correct: false, feedback: "That is only one small piece. A diligent search is much broader — reaching out to extended family on both sides, contacting the tribe, exploring all connections, and documenting everything." },
-      { text: "Asking the parents if they know anyone who can take the child", correct: false, feedback: "While asking parents is part of it, a diligent search goes much further. The department must independently contact the tribe, search for extended family, and document every effort." }
+      { text: "Thoroughly searching for extended family, Tribal members, and other preferred placements and documenting every step", correct: true, feedback: "Right. A diligent search means making real, documented efforts to find family members and preferred placements. You cannot say preferred placements are unavailable if you never truly looked." },
+      { text: "Checking if the Tribe has a list of foster homes available", correct: false, feedback: "That is only one small piece. A diligent search is much broader — reaching out to extended family on both sides, contacting the Tribe, exploring all connections, and documenting everything." },
+      { text: "Asking the parents if they know anyone who can take the child", correct: false, feedback: "While asking parents is part of it, a diligent search goes much further. The department must independently contact the Tribe, search for extended family, and document every effort." }
     ]},
     { guide: "An Indian custodian is not just a parent. Under ICWA, who can be an Indian custodian?", choices: [
-      { text: "Any Indian person who has legal custody of an Indian child under tribal law or custom, or state law", correct: true, feedback: "Correct. This is broader than many realize. An Indian custodian could be a grandparent, aunt, uncle, or other relative who has custody through legal proceedings or through tribal custom." },
+      { text: "Any Indian person who has legal custody of an Indian child under Tribal law or custom, or state law", correct: true, feedback: "Correct. This is broader than many realize. An Indian custodian could be a grandparent, aunt, uncle, or other relative who has custody through legal proceedings or through Tribal custom." },
       { text: "Only the child's biological parents", correct: false, feedback: "An Indian custodian is specifically someone other than the parent who has legal custody. This includes grandparents, aunts, uncles, and others." },
-      { text: "Only someone officially appointed by the tribal court", correct: false, feedback: "It is broader. Custody through tribal law, tribal custom, or state law all count. Customary care arrangements recognized within the tribal community also count." }
+      { text: "Only someone officially appointed by the Tribal court", correct: false, feedback: "It is broader. Custody through Tribal law, Tribal custom, or state law all count. Customary care arrangements recognized within the Tribal community also count." }
     ]},
     { guide: "What is the ultimate goal of ICWA when it comes to families?", choices: [
-      { text: "To keep Indian children with Indian families and connected to their culture and community", correct: true, feedback: "That is the heart of ICWA. Every provision — from active efforts to placement preferences to tribal jurisdiction — serves this central goal. Indian children belong with Indian families." },
-      { text: "To prevent the state from ever being involved with Indian families", correct: false, feedback: "ICWA does not prevent state involvement when children are in danger. It sets higher standards to make sure removal is not based on cultural misunderstanding or bias." },
-      { text: "To give tribes complete control over all child welfare cases", correct: false, feedback: "The ultimate goal is broader: keeping Indian children with Indian families. Tribal sovereignty is a means to that goal." }
+      { text: "To keep Indian children with Indian families and connected to their culture and community", correct: true, feedback: "That is the heart of ICWA. Every provision — from active efforts to placement preferences to Tribal jurisdiction — serves this central goal. Indian children belong with Indian families." },
+      { text: "To prevent the state from ever being involved with Indian families", correct: false, feedback: "ICWA does not prevent state involvement when Indian children are in danger. It sets higher standards to make sure removal is not based on cultural misunderstanding or bias." },
+      { text: "To give Tribes complete control over all child welfare cases", correct: false, feedback: "The ultimate goal is broader: keeping Indian children with Indian families. Tribal sovereignty is a means to that goal." }
     ]}
   ],
   'court-knowledge': [
     { guide: "Welcome to Court Knowledge. Courts have their own language. Let us start simple. What is an 'adjudication' hearing?", choices: [
-      { text: "The hearing where the judge decides if the allegations are true", correct: true, feedback: "Right. Adjudication is the 'fact-finding' hearing. In an ICWA case, this is where the court determines if the child is in danger and whether legal standards for intervention have been met." },
+      { text: "The hearing where the judge decides if the allegations are true", correct: true, feedback: "Right. Adjudication is the 'fact-finding' hearing. In an ICWA case, this is where the court determines if the Indian child is in danger and whether legal standards for intervention have been met." },
       { text: "The first hearing where everyone meets the judge", correct: false, feedback: "That is usually an initial hearing or shelter care hearing. Adjudication comes later — it is where the judge decides whether the allegations are proven." },
       { text: "The hearing where the child is placed with a new family", correct: false, feedback: "Placement decisions happen at disposition, which comes after adjudication." }
     ]},
     { guide: "After adjudication comes 'disposition.' What happens at disposition?", choices: [
-      { text: "The judge decides what services, placements, and actions are needed for the child and family", correct: true, feedback: "Exactly. Disposition is when the judge decides the 'what now' — services for the family, placement, visitation, and reunification steps. In ICWA cases, this must consider active efforts, placement preferences, and tribal input." },
+      { text: "The judge decides what services, placements, and actions are needed for the child and family", correct: true, feedback: "Exactly. Disposition is when the judge decides the 'what now' — services for the family, placement, visitation, and reunification steps. In ICWA cases, this must consider active efforts, placement preferences, and Tribal input." },
       { text: "The case is dismissed and everyone goes home", correct: false, feedback: "Disposition is not dismissal. It is where the judge decides the plan going forward." },
       { text: "The judge terminates parental rights", correct: false, feedback: "TPR is a separate, much later proceeding. Disposition is about setting the plan: services, placement, and reunification steps." }
     ]},
     { guide: "You might hear about a 'GAL' or a 'CASA.' What is the difference?", choices: [
-      { text: "A GAL is usually an attorney representing the child's interests; a CASA is a trained volunteer advocate", correct: true, feedback: "Correct. A Guardian ad Litem (GAL) is typically an attorney appointed to represent the child's best interests. A CASA is a trained community volunteer. Both serve the child, but in different capacities." },
+      { text: "A GAL is usually an attorney representing the child's interests; a CASA is a trained volunteer advocate", correct: true, feedback: "Correct. A Guardian ad Litem (GAL) is typically an attorney appointed to represent the Indian child's best interests. A CASA is a trained community volunteer. Both serve the child, but in different capacities." },
       { text: "They are the same thing with different names", correct: false, feedback: "They are different roles. A GAL is usually an attorney; a CASA is a trained volunteer. Some courts use one, some use both." },
       { text: "They both represent the parents", correct: false, feedback: "Neither represents the parents. Parents have their own attorneys. A GAL represents the child's best interests; a CASA is a volunteer advocate for the child." }
     ]},
     { guide: "A department might file a permanency plan with a 'concurrent plan of adoption.' What does concurrent planning mean?", choices: [
-      { text: "Working on reunification while also preparing a backup plan at the same time", correct: true, feedback: "Right. Concurrent planning means pursuing two goals simultaneously. In ICWA cases, both plans must follow placement preferences and involve tribal consultation." },
+      { text: "Working on reunification while also preparing a backup plan at the same time", correct: true, feedback: "Right. Concurrent planning means pursuing two goals simultaneously. In ICWA cases, both plans must follow placement preferences and involve Tribal consultation." },
       { text: "Adoption is already the main goal and reunification has been abandoned", correct: false, feedback: "Concurrent planning is not giving up on reunification. It means working on both tracks at once." },
       { text: "The parents get to choose between reunification and adoption", correct: false, feedback: "It is a case management approach where the department works on two plans simultaneously, not a choice offered to parents." }
     ]},
     { guide: "In ICWA cases, different 'burdens of proof' apply. From lowest to highest, what is the correct order?", choices: [
-      { text: "Preponderance of evidence (lowest), then clear and convincing evidence, then beyond a reasonable doubt (highest)", correct: true, feedback: "Correct. ICWA uses clear and convincing for foster care and beyond a reasonable doubt for TPR. Knowing these standards helps you understand why ICWA demands more proof before separating families." },
+      { text: "Preponderance of evidence (lowest), then clear and convincing evidence, then beyond a reasonable doubt (highest)", correct: true, feedback: "Correct. ICWA uses clear and convincing for foster care and beyond a reasonable doubt for TPR. Knowing these standards helps you understand why ICWA demands more proof before separating Indian families." },
       { text: "Beyond a reasonable doubt (lowest), then preponderance, then clear and convincing (highest)", correct: false, feedback: "That is reversed. The correct order from lowest to highest is: preponderance, clear and convincing, beyond a reasonable doubt." },
       { text: "They all mean basically the same thing", correct: false, feedback: "Very different. Preponderance = just over 50%. Clear and convincing = highly probable. Beyond a reasonable doubt = no reasonable alternative. These distinctions matter enormously in ICWA cases." }
     ]}
@@ -538,88 +744,99 @@ const sectionDialogues = {
 // ══════════════════════ HYPOTHETICALS ══════════════════════
 const hypoDialogues = [
   [
-    { guide: "Let me tell you about A.N. He is 7 years old and affiliated with the Blackfeet Tribe. He was removed from his mother due to substance use and homelessness. He has been in foster care for 12 months with a non-Native, non-kin family. His mother has a large extended family, but the Department has not explored any of them. Now they have filed a permanency plan with a concurrent plan of adoption by the foster family. What is the first ICWA concern you notice?", choices: [
+    { guide: "Let me tell you about A.N. He is 7 years old and affiliated with the Blackfeet Tribe. He was removed from his mother due to substance use and homelessness. He has been in foster care for 12 months with a non-Indian, non-kin family. His mother has a large extended family, but the Department has not explored any of them. Now they have filed a permanency plan with a concurrent plan of adoption by the foster family. What is the first ICWA concern you notice?", choices: [
       { text: "The Department has not explored placement with A.N.'s extended family, violating placement preferences", correct: true, feedback: "That is the biggest red flag. ICWA placement preferences put extended family first. The Department has not even explored whether any of them could provide placement. Skipping this step is a serious ICWA violation." },
       { text: "The father should have been contacted first", correct: false, feedback: "Contacting the father is important, but the most immediate concern is that the Department failed to explore extended family placement at all during 12 months." },
       { text: "Twelve months in foster care is too long", correct: false, feedback: "The length is concerning, but the core issue is that during those 12 months, the Department failed to search for extended family or preferred placements." }
     ]},
     { guide: "The Department also needs to consult with the Blackfeet Tribe. What should that consultation include?", choices: [
-      { text: "Discussing placement options, identifying family members, and getting input on services and the case plan", correct: true, feedback: "Correct. Tribal consultation should be ongoing and meaningful — not just paperwork. The tribe can help identify family members and community resources the Department cannot find on its own." },
-      { text: "Just sending the tribe the paperwork about the case", correct: false, feedback: "Consultation means active engagement, not just sending papers. It requires working together to identify family, services, and plans." },
-      { text: "Asking the tribe if they want to take over the case", correct: false, feedback: "Consultation is broader than offering to hand off the case. It should include identifying family placements, services, and planning together." }
+      { text: "Discussing placement options, identifying family members, and getting input on services and the case plan", correct: true, feedback: "Correct. Tribal consultation should be ongoing and meaningful — not just paperwork. The Tribe can help identify family members and community resources the Department cannot find on its own." },
+      { text: "Just sending the Tribe the paperwork about the case", correct: false, feedback: "Consultation means active engagement, not just sending papers. It requires working together to identify Indian family, services, and plans." },
+      { text: "Asking the Tribe if they want to take over the case", correct: false, feedback: "Consultation is broader than offering to hand off the case. It should include identifying family placements, services, and planning together." }
     ]},
-    { guide: "The permanency plan proposes adoption by the non-Native foster family. Under ICWA, what must be true for this to go forward?", choices: [
+    { guide: "The permanency plan proposes adoption by the non-Indian foster family. Under ICWA, what must be true for this to go forward?", choices: [
       { text: "The Department must show good cause to deviate from placement preferences and prove a diligent search was done", correct: true, feedback: "Exactly. Since the Department never explored extended family, they cannot claim preferred placements are unavailable. This permanency plan has serious ICWA problems." },
       { text: "The foster family just needs to have bonded with the child", correct: false, feedback: "Bonding does not override ICWA placement preferences. A bond that formed because the Department failed to follow ICWA is not good cause." },
-      { text: "Nothing special, adoption is the best outcome for kids in foster care", correct: false, feedback: "In ICWA cases, adoption must follow placement preferences. Best interest includes maintaining cultural and family connections." }
+      { text: "Nothing special, adoption is the best outcome for Indian children in foster care", correct: false, feedback: "In ICWA cases, adoption must follow placement preferences. Best interest includes maintaining cultural and family connections." }
     ]}
   ],
   [
     { guide: "Meet E.L. He is 4 years old and an enrolled Crow Tribe member. He was removed from his mother. His father, D.T., lives nearby in a studio apartment, works early morning shifts, is steadily employed, and has no CPS history. Despite this, the Department is refusing placement with D.T., citing work hours and apartment size. What is the ICWA issue?", choices: [
-      { text: "The Department is failing to provide active efforts to help D.T. overcome these barriers", correct: true, feedback: "Exactly right. Instead of refusing placement over fixable logistics, the Department should be actively helping D.T. find solutions — childcare assistance, help identifying larger housing, connecting with tribal resources." },
+      { text: "The Department is failing to provide active efforts to help D.T. overcome these barriers", correct: true, feedback: "Exactly right. Instead of refusing placement over fixable logistics, the Department should be actively helping D.T. find solutions — childcare assistance, help identifying larger housing, connecting with Tribal resources." },
       { text: "D.T. should just change his work schedule", correct: false, feedback: "That puts the burden on the parent rather than where ICWA places it: on the Department. Active efforts require the Department to help find solutions." },
-      { text: "A studio apartment is too small for a child", correct: false, feedback: "Many families successfully raise children in studios. The Department should be helping solve barriers, not hiding behind them." }
+      { text: "A studio apartment is too small for a child", correct: false, feedback: "Many Indian families successfully raise children in studios. The Department should be helping solve barriers, not hiding behind them." }
     ]},
     { guide: "The Department has also not facilitated meaningful parenting time between E.L. and D.T. Why is this a problem?", choices: [
-      { text: "Active efforts includes maintaining the parent-child relationship and facilitating contact", correct: true, feedback: "Correct. Active efforts is not just about services. It also means maintaining and strengthening the child's relationships. By not facilitating visits, the Department is undermining the bond between a fit parent and his child." },
-      { text: "It is fine because D.T. was not the parent involved in the removal", correct: false, feedback: "The removal was from the mother's care, but that does not mean the Department can ignore the father. D.T. is a fit parent willing to take custody." },
+      { text: "Active efforts includes maintaining the parent-child relationship and facilitating contact", correct: true, feedback: "Correct. Active efforts is not just about services. It also means maintaining and strengthening the child's relationships. By not facilitating visits, the Department is undermining the bond between a fit parent and his Indian child." },
+      { text: "It is fine because D.T. was not the parent involved in the removal", correct: false, feedback: "The removal was from the mother's care, but that does not mean the Department can ignore the father. D.T. is a fit parent willing to take custody of his Indian child." },
       { text: "Parenting time is not related to active efforts", correct: false, feedback: "Maintaining family connections is a core part of active efforts. The Department should be strengthening existing healthy relationships." }
     ]},
     { guide: "Under ICWA's placement preferences, where does D.T. fall?", choices: [
       { text: "He is at the very top as a parent/extended family member, the first preference", correct: true, feedback: "Exactly. D.T. is E.L.'s father — extended family is the first preference. A fit, willing father with no CPS history should be at the top of the list." },
       { text: "He is somewhere in the middle of the preferences", correct: false, feedback: "D.T. is a parent and extended family member — the very top of ICWA's placement preferences." },
-      { text: "He does not qualify because the child was not removed from his care", correct: false, feedback: "Placement preferences apply regardless of which parent the child was removed from. D.T. is the first preference." }
+      { text: "He does not qualify because the Indian child was not removed from his care", correct: false, feedback: "Placement preferences apply regardless of which parent the Indian child was removed from. D.T. is the first preference." }
     ]}
   ],
   [
     { guide: "Meet K.G., a 10-year-old enrolled Three Affiliated Tribes member. When her parents struggled, they placed her with her maternal grandmother, Mrs. L. — an informal arrangement. Mrs. L. enrolls her in school and takes her to medical appointments. Then an anonymous report alleged neglect because K.G. is not living with her parents. CFS opened a DN case. What stands out?", choices: [
-      { text: "The grandmother is an Indian custodian under tribal custom, and the informal arrangement should be respected", correct: true, feedback: "Good eye. Under ICWA, an Indian custodian can have custody through tribal law or custom. In many tribal cultures, placing a child with a grandparent during difficult times is a recognized practice. Mrs. L. has been acting as K.G.'s caregiver." },
-      { text: "The parents should have gone to court first", correct: false, feedback: "ICWA recognizes custody arrangements under tribal custom, not just formal court orders. Customary grandmother care is recognized in many tribal traditions." },
-      { text: "CFS was right to open a case since there is no formal documentation", correct: false, feedback: "This is exactly the kind of cultural misunderstanding ICWA was designed to address. Under ICWA, custody by tribal custom is recognized. K.G. is safe and well-cared for." }
+      { text: "The grandmother is an Indian custodian under Tribal custom, and the informal arrangement should be respected", correct: true, feedback: "Good eye. Under ICWA, an Indian custodian can have custody through Tribal law or custom. In many Tribal cultures, placing an Indian child with a grandparent during difficult times is a recognized practice. Mrs. L. has been acting as K.G.'s caregiver." },
+      { text: "The parents should have gone to court first", correct: false, feedback: "ICWA recognizes custody arrangements under Tribal custom, not just formal court orders. Customary grandmother care is recognized in many Tribal traditions." },
+      { text: "CFS was right to open a case since there is no formal documentation", correct: false, feedback: "This is exactly the kind of cultural misunderstanding ICWA was designed to address. Under ICWA, custody by Tribal custom is recognized. K.G. is safe and well-cared for." }
     ]},
     { guide: "If ICWA applies, what evidentiary burden must the state meet to remove K.G. from Mrs. L.'s care?", choices: [
       { text: "Clear and convincing evidence, including QEW testimony, that staying with Mrs. L. would cause serious harm", correct: true, feedback: "Right. Given that K.G. is safe, in school, and receiving medical care, this would be extremely difficult for the state to prove." },
-      { text: "Just showing that the parents are not directly caring for K.G.", correct: false, feedback: "Nowhere near enough under ICWA. The state needs clear and convincing evidence plus QEW testimony that the current situation is likely to cause serious harm." },
-      { text: "The same standard as any other child welfare case", correct: false, feedback: "ICWA sets higher standards. For foster care: clear and convincing evidence plus QEW testimony. These exist to prevent culturally-biased removals." }
+      { text: "Just showing that the parents are not directly caring for K.G.", correct: false, feedback: "Nowhere near enough under ICWA. The state needs clear and convincing evidence plus QEW testimony that the current situation is likely to cause serious harm to the Indian child." },
+      { text: "The same standard as any other child welfare case", correct: false, feedback: "ICWA sets higher standards. For foster care: clear and convincing evidence plus QEW testimony. These exist to prevent culturally-biased removals of Indian children." }
     ]},
     { guide: "What role should the Three Affiliated Tribes play in this situation?", choices: [
-      { text: "The tribe should intervene, potentially request transfer to tribal court, and testify about the validity of the family arrangement", correct: true, feedback: "Exactly. The tribe can protect K.G. and her family by intervening, requesting transfer to tribal court, and providing testimony about customary caregiving practices." },
-      { text: "The tribe does not need to be involved since K.G. is safe", correct: false, feedback: "The tribe absolutely needs to be involved. A DN case has been opened. Without tribal involvement, cultural misunderstanding could drive the outcome." },
-      { text: "The tribe should find K.G. a different placement", correct: false, feedback: "K.G. does not need a different placement. She is safe with her grandmother. The tribe's role should be to protect this arrangement." }
+      { text: "The Tribe should intervene, potentially request transfer to Tribal court, and testify about the validity of the family arrangement", correct: true, feedback: "Exactly. The Tribe can protect K.G. and her family by intervening, requesting transfer to Tribal court, and providing testimony about customary caregiving practices." },
+      { text: "The Tribe does not need to be involved since K.G. is safe", correct: false, feedback: "The Tribe absolutely needs to be involved. A DN case has been opened. Without Tribal involvement, cultural misunderstanding could drive the outcome." },
+      { text: "The Tribe should find K.G. a different placement", correct: false, feedback: "K.G. does not need a different placement. She is safe with her grandmother. The Tribe's role should be to protect this arrangement." }
     ]}
   ]
 ];
 
 // ══════════════════════ CASE BUILDER ══════════════════════
 const caseBuilderSteps = [
-  { num: 'Step 1', title: 'Inquiry', text: 'At the very start of any child welfare case, ask: Does this child have Native American heritage? Is the child a member of or eligible for membership in a federally recognized tribe?', action: false },
-  { num: 'Step 2', title: 'Verification', text: 'If there is reason to believe ICWA may apply, send formal notice to the tribe\'s ICWA Designated Agent. Until status is confirmed or denied, treat the case as an ICWA case.', action: false },
-  { num: 'Step 3', title: 'Notice to the Tribe', text: 'Formal notice must go by registered mail with return receipt. Include the child\'s name, birthdate, tribal affiliation, parent names, a copy of the petition, and information about the tribe\'s right to intervene or request transfer.', action: false },
-  { num: 'Step 4', title: 'Active Efforts Begin', text: 'From the moment removal is considered, active efforts must begin. Actively help the family access services, connect with tribal resources, arrange transportation, find culturally appropriate programs. Document everything.', action: false },
-  { num: 'Step 5', title: 'Placement Preferences', text: 'If removal is necessary, follow the order: (1) extended family, (2) tribal foster home, (3) Indian foster home, (4) tribally approved institution. Conduct a diligent search and document all efforts.', action: false },
-  { num: 'Step 6', title: 'Qualified Expert Witness', text: 'Before the court can order foster care, a QEW must testify that continued custody is likely to cause serious harm. Work with the tribe to identify an appropriate QEW.', action: false },
-  { num: 'Step 7', title: 'Ongoing Compliance', text: 'ICWA compliance is not a one-time checklist. Continue active efforts, maintain tribal consultation, follow placement preferences, and ensure every hearing considers ICWA requirements.', action: false },
-  { num: 'Step 8', title: 'Permanency Planning', text: 'If reunification is not possible, any permanency plan must follow ICWA adoptive placement preferences. Good cause must be documented to deviate. The tribe must be consulted.', action: false },
+  {
+    num: 'Step 1', title: 'Inquiry',
+    text: 'At the very start of any child welfare case, ask: Does this child have Indian heritage? Is the child a <span class="def-word" onclick="showDef(\'member\')">member</span> of or <span class="def-word" onclick="showDef(\'eligible for membership\')">eligible for membership</span> in a federally recognized Tribe?',
+    action: false
+  },
+  { num: 'Step 2', title: 'Verification', text: 'If there is reason to believe ICWA may apply, send formal notice to the Tribe\'s ICWA Designated Agent. Until status is confirmed or denied, treat the case as an ICWA case.', action: false },
+  { num: 'Step 3', title: 'Notice to the Tribe', text: 'Formal notice must go by registered mail with return receipt. Include the Indian child\'s name, birthdate, Tribal affiliation, parent names, a copy of the petition, and information about the Tribe\'s right to intervene or request transfer.', action: false },
+  {
+    num: 'Step 4', title: 'Active Efforts Begin',
+    text: 'From the moment removal is considered, active efforts must begin. The Department must actively help families access services, connect with Tribal resources, arrange transportation, find culturally appropriate programs, and assist with any other barriers standing between the family and reunification. Document everything.',
+    action: false
+  },
+  {
+    num: 'Step 5', title: 'Placement Preferences',
+    text: 'If removal is necessary, follow placement preferences in order. Conduct a diligent search and document all efforts before moving to the next option.',
+    action: false,
+    list: [
+      '1. Extended family members',
+      '2. A foster home licensed, approved, or specified by the Indian child\'s Tribe',
+      '3. An Indian foster home licensed or approved by an authorized non-Tribal licensing authority',
+      '4. An institution for children approved by an Indian Tribe or operated by an Indian organization that has a program suitable to meet the child\'s needs'
+    ]
+  },
+  { num: 'Step 6', title: 'Qualified Expert Witness', text: 'Before the court can order foster care, a QEW must testify that continued custody is likely to cause serious harm to the Indian child. Work with the Tribe to identify an appropriate QEW.', action: false },
+  { num: 'Step 7', title: 'Ongoing Compliance', text: 'ICWA compliance is not a one-time checklist. Continue active efforts, maintain Tribal consultation, follow placement preferences, and ensure every hearing considers ICWA requirements.', action: false },
+  { num: 'Step 8', title: 'Permanency Planning', text: 'If reunification is not possible, any permanency plan must follow ICWA adoptive placement preferences. Good cause must be documented to deviate. The Tribe must be consulted.', action: false },
   {
     num: 'Action',
     title: 'Building Relationships in Practice',
-    text: 'Due to the misunderstood role the Tribe plays in the child welfare system, the Tribal Attorney — and all practitioners — should build ongoing relationships with the professionals they most frequently work alongside. Strong relationships reduce misunderstandings and lead to better outcomes for children and families.',
+    text: 'Due to the misunderstood role the Tribe plays in the child welfare system, the Tribal Attorney — and all practitioners — should build ongoing relationships with the professionals they most frequently work alongside. Strong relationships reduce misunderstandings and lead to better outcomes for Indian children and families.',
     action: true,
     list: [
-      'Judges and court staff',
-      'Opposing counsel',
-      'State child welfare agency staff and supervisors',
-      'Local juvenile court improvement programs',
-      'Child advocates (attorney and non-attorney)',
-      'Criminal prosecutors',
-      'Court Appointed Special Advocates (CASAs) and Guardians Ad Litem (GALs)',
-      'Child advocacy centers',
-      'Administrative offices of the court',
+      'Judges and court staff','Opposing counsel','State child welfare agency staff and supervisors',
+      'Local juvenile court improvement programs','Child advocates (attorney and non-attorney)',
+      'Criminal prosecutors','Court Appointed Special Advocates (CASAs) and Guardians Ad Litem (GALs)',
+      'Child advocacy centers','Administrative offices of the court',
       'Relevant departments or divisions of Indian affairs',
-      'Multidisciplinary teams and child fatality review teams',
-      'Key service providers',
-      'Medical and mental health professionals',
-      'School staff',
+      'Multidisciplinary teams and child fatality review teams','Key service providers',
+      'Medical and mental health professionals','School staff',
       'Other local child-centered organizations'
     ]
   }
@@ -629,11 +846,7 @@ const caseBuilderSteps = [
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
-  if (el) {
-    el.classList.add('active');
-    // Reset scroll position
-    requestAnimationFrame(() => { el.scrollTop = 0; });
-  }
+  if (el) { el.classList.add('active'); requestAnimationFrame(() => { el.scrollTop = 0; }); }
   if (id === 'screen-hub') renderHub();
   if (id === 'screen-badges') renderBadgesPage();
   if (id === 'screen-timeline') renderTimeline();
@@ -644,10 +857,7 @@ function setPerception(idx, btn) {
   btn.classList.add('selected');
 }
 
-function finishPerception() {
-  awardBadge('perception');
-  showScreen('screen-timeline');
-}
+function finishPerception() { awardBadge('perception'); showScreen('screen-timeline'); }
 
 // ══════════════════════ TIMELINE ══════════════════════
 function renderTimeline() {
@@ -670,22 +880,33 @@ function renderHub() {
   const pct = Math.round((done / mainSections.length) * 100);
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
-  const earned = Object.keys(state.badges).length;
-  document.getElementById('badge-count-display').textContent = earned + ' / ' + allBadges.length;
+  document.getElementById('badge-count-display').textContent = Object.keys(state.badges).length + ' / ' + allBadges.length;
 
   mainSections.forEach(s => {
     const fill = document.getElementById('prog-' + s);
     if (fill) fill.style.width = state.sectionProgress[s] + '%';
     const status = document.getElementById('status-' + s);
     if (status) {
-      if (state.sectionDone[s]) { status.textContent = 'Done ✓'; status.className = 'card-status status-complete'; }
-      else if (state.sectionProgress[s] > 0) { status.textContent = 'Continue'; status.className = 'card-status status-available'; }
-      else { status.textContent = 'Start'; status.className = 'card-status status-available'; }
+      if (state.sectionDone[s]) {
+        status.textContent = 'Done ✓'; status.className = 'card-status status-complete';
+      } else if (state.sessions[s] && state.sessions[s].step > 0) {
+        status.textContent = 'Resume'; status.className = 'card-status status-available';
+      } else if (state.sectionProgress[s] > 0) {
+        status.textContent = 'Retry'; status.className = 'card-status status-available';
+      } else {
+        status.textContent = 'Start'; status.className = 'card-status status-available';
+      }
     }
   });
+
   for (let i = 0; i < 3; i++) {
+    const key = 'hypo' + i;
     const s = document.getElementById('status-hypo' + i);
-    if (s && state.sectionDone['hypo' + i]) { s.textContent = 'Done ✓'; s.className = 'card-status status-complete'; }
+    if (s) {
+      if (state.sectionDone[key]) { s.textContent = 'Done ✓'; s.className = 'card-status status-complete'; }
+      else if (state.sessions[key] && state.sessions[key].step > 0) { s.textContent = 'Resume'; s.className = 'card-status status-available'; }
+      else { s.textContent = 'Start'; s.className = 'card-status status-available'; }
+    }
   }
 
   const bd = document.getElementById('badges-display');
@@ -697,10 +918,9 @@ function renderHub() {
 
 // ══════════════════════ BADGES PAGE ══════════════════════
 function renderBadgesPage() {
-  const grid = document.getElementById('badges-grid');
   const earned = Object.keys(state.badges).length;
   document.getElementById('badge-count-text').textContent = earned + ' of ' + allBadges.length + ' earned';
-  grid.innerHTML = allBadges.map(b => {
+  document.getElementById('badges-grid').innerHTML = allBadges.map(b => {
     const e = state.badges[b.id];
     return `<div class="badge-item ${e?'earned':''}"><div class="badge-circle">${e?b.icon:'?'}</div><div class="badge-name">${e?b.name:'???'}</div></div>`;
   }).join('');
@@ -719,51 +939,51 @@ function awardBadge(id) {
 }
 function closeBadgePopup() { document.getElementById('badge-popup').classList.remove('show'); }
 
-// ══════════════════════ RESOURCES MODAL ══════════════════════
-function openResources() {
-  document.getElementById('resources-modal').classList.add('show');
-}
+// ══════════════════════ RESOURCES / RESET MODALS ══════════════════════
+function openResources() { document.getElementById('resources-modal').classList.add('show'); }
 function closeResources(event) {
-  if (!event || event.target === document.getElementById('resources-modal')) {
+  if (!event || event.target === document.getElementById('resources-modal'))
     document.getElementById('resources-modal').classList.remove('show');
-  }
 }
-
-// ══════════════════════ RESET ══════════════════════
-function confirmReset() {
-  document.getElementById('reset-modal').classList.add('show');
-}
+function confirmReset() { document.getElementById('reset-modal').classList.add('show'); }
 function closeResetModal(event) {
-  if (!event || event.target === document.getElementById('reset-modal')) {
+  if (!event || event.target === document.getElementById('reset-modal'))
     document.getElementById('reset-modal').classList.remove('show');
-  }
 }
 function doReset() {
-  state.badges = {};
-  state.sectionProgress = { courthouse: 0, tribal: 0, household: 0, 'court-knowledge': 0 };
-  state.sectionDone = {};
-  state.currentSection = null;
-  state.currentStep = 0;
-  state.dialogueHistory = [];
-  state.results = [];
-  state.defLookupCount = 0;
-  // Reset timeline so it re-awards badge on next view
-  const tl = document.getElementById('timeline-container');
-  if (tl) tl.innerHTML = '';
-  closeResetModal();
-  showScreen('screen-hub');
+  state.badges = {}; state.sectionProgress = { courthouse: 0, tribal: 0, household: 0, 'court-knowledge': 0 };
+  state.sectionDone = {}; state.sessions = {}; state.currentSection = null;
+  state.currentStep = 0; state.dialogueHistory = []; state.results = []; state.defLookupCount = 0;
+  const tl = document.getElementById('timeline-container'); if (tl) tl.innerHTML = '';
+  closeResetModal(); showScreen('screen-hub');
+}
+
+// ══════════════════════ EXPLORE MORE MODAL ══════════════════════
+function openExploreModal(id) {
+  document.getElementById(id).classList.add('show');
+}
+function closeExploreModal(event) {
+  const modal = document.getElementById('explore-active-efforts');
+  if (!event || event.target === modal) modal.classList.remove('show');
 }
 
 // ══════════════════════ DEFINITIONS ══════════════════════
+const exploreTerms = { 'Active Efforts': 'explore-active-efforts' };
+
 function insertDefs(text) {
   const terms = Object.keys(definitions).sort((a, b) => b.length - a.length);
-  let result = text;
-  const used = new Set();
+  let result = text; const used = new Set();
   terms.forEach(term => {
     if (used.has(term.toLowerCase())) return;
     const re = new RegExp(`\\b(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'i');
     if (re.test(result)) {
-      result = result.replace(re, `<span class="def-word" onclick="showDef('${term.replace(/'/g, "\\'")}')">$1</span>`);
+      if (exploreTerms[term]) {
+        result = result.replace(re,
+          `<span class="def-word-gold" onclick="openExploreModal('${exploreTerms[term]}')">$1</span>`);
+      } else {
+        result = result.replace(re,
+          `<span class="def-word" onclick="showDef('${term.replace(/'/g, "\\'")}')">$1</span>`);
+      }
       used.add(term.toLowerCase());
     }
   });
@@ -780,9 +1000,48 @@ document.addEventListener('click', e => {
   if (!e.target.classList.contains('def-word') && !e.target.closest('.def-tooltip')) closeTooltip();
 });
 
+// ══════════════════════ SESSION PERSISTENCE ══════════════════════
+function saveSession(section) {
+  if (!section || section === 'case-builder') return;
+  state.sessions[section] = {
+    step: state.currentStep,
+    results: JSON.parse(JSON.stringify(state.results)),
+    dialogueHistory: JSON.parse(JSON.stringify(state.dialogueHistory))
+  };
+}
+
+function restoreSession(section) {
+  const saved = state.sessions[section];
+  if (!saved || saved.step === 0) return false;
+  state.currentStep = saved.step;
+  state.results = JSON.parse(JSON.stringify(saved.results));
+  state.dialogueHistory = JSON.parse(JSON.stringify(saved.dialogueHistory));
+  return true;
+}
+
+function clearSession(section) { delete state.sessions[section]; }
+
 // ══════════════════════ DIALOGUE ENGINE ══════════════════════
 function openSection(section) {
   if (section === 'case-builder') { showCaseBuilder(); return; }
+
+  const data = section.startsWith('hypo')
+    ? hypoDialogues[parseInt(section.replace('hypo', ''))]
+    : sectionDialogues[section];
+
+  const saved = state.sessions[section];
+  if (saved && saved.step > 0 && data && saved.step < data.length) {
+    state.currentSection = section;
+    showScreen('screen-dialogue');
+    showResumePrompt(section, saved.step, data.length);
+    return;
+  }
+
+  startSection(section);
+}
+
+function startSection(section) {
+  clearSession(section);
   state.currentSection = section;
   state.currentStep = 0;
   state.results = [];
@@ -790,14 +1049,55 @@ function openSection(section) {
   showScreen('screen-dialogue');
   renderStep();
 }
-function openHypo(idx) {
-  state.currentSection = 'hypo' + idx;
-  state.currentStep = 0;
-  state.results = [];
-  state.dialogueHistory = [];
+
+function resumeSection(section) {
+  state.currentSection = section;
+  restoreSession(section);
   showScreen('screen-dialogue');
   renderStep();
 }
+
+function showResumePrompt(section, savedStep, totalSteps) {
+  const names = {
+    'courthouse': 'The Courthouse', 'tribal': 'Tribe, Sovereignty and Notice',
+    'household': 'Household, Placement and Best Interest', 'court-knowledge': 'Court Knowledge',
+    'hypo0': 'The Case of A.N.', 'hypo1': 'The Case of E.L.', 'hypo2': 'The Case of K.G.'
+  };
+
+  const area = document.getElementById('dialogue-area');
+  const bar = document.getElementById('choices-bar');
+  area.innerHTML = '';
+  bar.innerHTML = '';
+
+  document.getElementById('dialogue-progress').style.width = Math.round((savedStep / totalSteps) * 100) + '%';
+  document.getElementById('dialogue-progress-text').textContent = savedStep + '/' + totalSteps;
+
+  area.innerHTML = `
+    <div class="msg msg-guide">
+      <div class="guide-avatar">🪶</div>
+      <div class="msg-bubble">
+        Welcome back. You were in the middle of <strong>${names[section] || section}</strong> — you have completed ${savedStep} of ${totalSteps} questions.
+        <br><br>Pick up where you left off, or start over from the beginning?
+      </div>
+    </div>`;
+
+  const resumeBtn = document.createElement('button');
+  resumeBtn.className = 'continue-btn';
+  resumeBtn.textContent = `↩ Resume from Question ${savedStep + 1}`;
+  resumeBtn.onclick = () => resumeSection(section);
+
+  const restartBtn = document.createElement('button');
+  restartBtn.className = 'choice-btn';
+  restartBtn.textContent = '↺ Start Over from the Beginning';
+  restartBtn.onclick = () => startSection(section);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'resume-btns';
+  wrap.appendChild(resumeBtn);
+  wrap.appendChild(restartBtn);
+  bar.appendChild(wrap);
+}
+
 function getDialogueData() {
   if (state.currentSection.startsWith('hypo')) return hypoDialogues[parseInt(state.currentSection.replace('hypo', ''))];
   return sectionDialogues[state.currentSection] || [];
@@ -816,14 +1116,12 @@ function renderStep() {
   area.innerHTML = '';
   bar.innerHTML = '';
 
-  // History
   state.dialogueHistory.forEach(h => {
     area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs(h.guide)}</div></div>`;
     area.innerHTML += `<div class="msg msg-user"><div class="msg-bubble">${h.chosen}</div></div>`;
     area.innerHTML += `<div class="msg ${h.wasCorrect ? 'msg-success' : 'msg-wrong'}">${insertDefs(h.feedback)}</div>`;
   });
 
-  // Current
   area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs(step.guide)}</div></div>`;
 
   step.choices.forEach((c, i) => {
@@ -853,9 +1151,11 @@ function handleChoice(idx) {
   state.dialogueHistory.push({ guide: step.guide, chosen: choice.text, wasCorrect: choice.correct, feedback: choice.feedback });
   state.results.push({ q: step.guide.substring(0, 100) + '...', chosen: choice.text, correct: choice.correct, correctText: step.choices.find(c => c.correct).text });
 
-  if (!state.currentSection.startsWith('hypo') && state.sectionProgress[state.currentSection] !== undefined) {
+  if (!state.currentSection.startsWith('hypo') && state.sectionProgress[state.currentSection] !== undefined)
     state.sectionProgress[state.currentSection] = Math.round(((state.currentStep + 1) / data.length) * 100);
-  }
+
+  // Auto-save after every answer
+  saveSession(state.currentSection);
 
   setTimeout(() => {
     const fb = document.createElement('div');
@@ -869,15 +1169,20 @@ function handleChoice(idx) {
       const cont = document.createElement('button');
       cont.className = 'continue-btn';
       cont.textContent = state.currentStep < data.length - 1 ? 'Continue →' : 'See Results';
-      cont.onclick = () => { state.currentStep++; renderStep(); };
+      cont.onclick = () => { state.currentStep++; saveSession(state.currentSection); renderStep(); };
       bar.appendChild(cont);
     }, 200);
   }, 150);
 }
 
-function exitDialogue() { showScreen('screen-hub'); }
+function exitDialogue() {
+  // Save mid-session position before navigating away
+  if (state.currentSection && state.currentSection !== 'case-builder' && state.currentStep > 0)
+    saveSession(state.currentSection);
+  showScreen('screen-hub');
+}
 
-// ══════════════════════ RESULTS + 80% THRESHOLD ══════════════════════
+// ══════════════════════ RESULTS ══════════════════════
 function showResults() {
   const section = state.currentSection;
   const correct = state.results.filter(r => r.correct).length;
@@ -885,46 +1190,34 @@ function showResults() {
   const pct = Math.round((correct / total) * 100);
   const passed = pct >= 80;
 
-  // Hypotheticals: always award badge (participation-based)
+  clearSession(section); // run complete — remove saved session
+
   if (section.startsWith('hypo')) {
-    const hi = parseInt(section.replace('hypo', ''));
-    awardBadge('hypo' + (hi + 1));
+    awardBadge('hypo' + (parseInt(section.replace('hypo', '')) + 1));
     state.sectionDone[section] = true;
   } else if (sectionDialogues[section]) {
     if (passed) {
-      awardBadge(section);
-      state.sectionDone[section] = true;
-      state.sectionProgress[section] = 100;
+      awardBadge(section); state.sectionDone[section] = true; state.sectionProgress[section] = 100;
       const mainSections = ['courthouse', 'tribal', 'household', 'court-knowledge'];
       if (mainSections.every(s => state.sectionDone[s])) awardBadge('all-sections');
     } else {
-      // Not done, but track attempt progress
       state.sectionProgress[section] = Math.round((correct / total) * 100);
     }
   }
 
   let headline, icon, msg;
-  if (pct === 100) {
-    icon = '🌟'; headline = 'Perfect Score!';
-    msg = 'You got every single one right. Excellent understanding.';
-  } else if (passed) {
-    icon = '✅'; headline = 'Section Complete';
-    msg = 'Good work. Review any missed items below to strengthen your knowledge.';
-  } else {
-    icon = '📋'; headline = 'Keep Going';
-    msg = 'A great start. Score 80% or higher to earn your badge for this section.';
-  }
+  if (pct === 100) { icon = '🌟'; headline = 'Perfect Score!'; msg = 'You got every single one right. Excellent understanding.'; }
+  else if (passed) { icon = '✅'; headline = 'Section Complete'; msg = 'Good work. Review any missed items below to strengthen your knowledge.'; }
+  else { icon = '📋'; headline = 'Keep Going'; msg = 'A great start. Score 80% or higher to earn your badge for this section.'; }
 
-  // Build retry nudge for failed sections
   const retryNudge = (!section.startsWith('hypo') && !passed) ? `
     <div class="retry-nudge">
       <div class="retry-nudge-icon">🏅</div>
       <div class="retry-nudge-title">Badge not yet earned</div>
-      <div class="retry-nudge-text">You scored ${pct}%. Score 80% or higher to earn the badge for this section. Review what you missed and try again!</div>
+      <div class="retry-nudge-text">You scored ${pct}%. Score 80% or higher to earn the badge for this section.</div>
     </div>` : '';
 
-  const rc = document.getElementById('results-content');
-  rc.innerHTML = `
+  document.getElementById('results-content').innerHTML = `
     <div class="results-icon">${icon}</div>
     <h2 class="results-title">${headline}</h2>
     <p class="results-subtitle">${correct} of ${total} correct — ${pct}%</p>
@@ -946,11 +1239,7 @@ function showResults() {
   showScreen('screen-results');
 }
 
-function retrySection() {
-  const s = state.currentSection;
-  if (s.startsWith('hypo')) openHypo(parseInt(s.replace('hypo', '')));
-  else openSection(s);
-}
+function retrySection() { startSection(state.currentSection); }
 
 // ══════════════════════ CASE BUILDER ══════════════════════
 function showCaseBuilder() {
@@ -958,25 +1247,22 @@ function showCaseBuilder() {
   showScreen('screen-dialogue');
   const area = document.getElementById('dialogue-area');
   const bar = document.getElementById('choices-bar');
-  area.innerHTML = '';
-  bar.innerHTML = '';
+  area.innerHTML = ''; bar.innerHTML = '';
   document.getElementById('dialogue-progress').style.width = '100%';
   document.getElementById('dialogue-progress-text').textContent = 'Guide';
 
   area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs('Let me walk you through building an ICWA case from start to finish. Each step is essential.')}</div></div>`;
 
   caseBuilderSteps.forEach(step => {
-    const listHTML = step.list
-      ? `<ul class="case-step-list">${step.list.map(item => `<li>${item}</li>`).join('')}</ul>`
-      : '';
-    area.innerHTML += `<div class="case-step${step.action ? ' step-action' : ''}">
-      <div class="case-step-num">${step.num}: ${step.title}</div>
-      <div class="case-step-text">${insertDefs(step.text)}</div>
-      ${listHTML}
-    </div>`;
+    // For Step 1, the text already has inline HTML spans — use it directly without running insertDefs
+    // (which would double-wrap). For all other steps, run insertDefs normally.
+    const isStep1 = step.num === 'Step 1';
+    const bodyText = isStep1 ? step.text : insertDefs(step.text);
+    const listHTML = step.list ? `<ul class="case-step-list">${step.list.map(item => `<li>${item}</li>`).join('')}</ul>` : '';
+    area.innerHTML += `<div class="case-step${step.action?' step-action':''}"><div class="case-step-num">${step.num}: ${step.title}</div><div class="case-step-text">${bodyText}</div>${listHTML}</div>`;
   });
 
-  area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs('Remember: ICWA compliance is not about checking boxes. It is about honoring the relationship between Indian children, their families, and their tribal communities.')}</div></div>`;
+  area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs('Remember: ICWA compliance is not about checking boxes. It is about honoring the relationship between Indian children, their families, and their Tribal communities.')}</div></div>`;
 
   const btn = document.createElement('button');
   btn.className = 'continue-btn';
@@ -987,7 +1273,6 @@ function showCaseBuilder() {
   requestAnimationFrame(() => requestAnimationFrame(() => { area.scrollTop = 0; }));
 }
 
-// Init
 renderHub();
 </script>
 </body>
