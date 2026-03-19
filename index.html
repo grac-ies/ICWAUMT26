@@ -146,6 +146,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+    max-height: 52vh;
   }
 
   /* ── Outreach table ── */
@@ -1310,7 +1311,7 @@ function handleChoice(idx) {
   if (!state.currentSection.startsWith('hypo') && state.sectionProgress[state.currentSection] !== undefined)
     state.sectionProgress[state.currentSection] = Math.round(((state.currentStep + 1) / data.length) * 100);
 
-  // Auto-save after every answer
+
   saveSession(state.currentSection);
 
   setTimeout(() => {
@@ -1332,7 +1333,7 @@ function handleChoice(idx) {
 }
 
 function exitDialogue() {
-  // Save mid-session position before navigating away
+
   if (state.currentSection && state.currentSection !== 'case-builder' && state.currentStep > 0)
     saveSession(state.currentSection);
   showScreen('screen-hub');
@@ -1346,7 +1347,7 @@ function showResults() {
   const pct = Math.round((correct / total) * 100);
   const passed = pct >= 80;
 
-  clearSession(section); // run complete — remove saved session
+  clearSession(section);
 
   if (section.startsWith('hypo')) {
     awardBadge('hypo' + (parseInt(section.replace('hypo', '')) + 1));
@@ -1410,8 +1411,6 @@ function showCaseBuilder() {
   area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs('Let me walk you through building an ICWA case from start to finish. Each step is essential.')}</div></div>`;
 
   caseBuilderSteps.forEach(step => {
-    // For Step 1, the text already has inline HTML spans — use it directly without running insertDefs
-    // (which would double-wrap). For all other steps, run insertDefs normally.
     const isStep1 = step.num === 'Step 1';
     const bodyText = isStep1 ? step.text : insertDefs(step.text);
     const listHTML = step.list ? `<ul class="case-step-list">${step.list.map(item => `<li>${item}</li>`).join('')}</ul>` : '';
