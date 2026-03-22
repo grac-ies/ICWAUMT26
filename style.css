@@ -69,6 +69,7 @@
     50% { box-shadow: 0 0 48px rgba(196,98,45,0.4); }
   }
   .welcome-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay); margin-bottom: 10px; font-weight: 600; }
+  .welcome-greeting { font-family: 'Playfair Display', serif;font-size: 16px;color: var(--gold);margin-bottom: 8px;letter-spacing: 0.05em;}
   .welcome-title { font-family: 'Playfair Display', serif; font-size: 30px; line-height: 1.2; color: var(--cream); margin-bottom: 12px; }
   .welcome-subtitle { font-size: 15px; color: var(--light); line-height: 1.6; max-width: 340px; margin: 0 auto 28px; }
   .welcome-note { background: rgba(212,168,67,0.1); border: 1px solid rgba(212,168,67,0.25); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--gold); max-width: 360px; margin: 0 auto 28px; text-align: left; line-height: 1.5; }

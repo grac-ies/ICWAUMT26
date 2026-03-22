@@ -199,6 +199,7 @@
   <div class="welcome-hero">
     <div class="welcome-badge-ring"><span>🪶</span></div>
     <div class="welcome-eyebrow">Indian Child Welfare Act</div>
+    <div class="welcome-greeting">Greetings, Young Elder</div>
     <h1 class="welcome-title">Walking With ICWA</h1>
     <p class="welcome-subtitle">Learn the Indian Child Welfare Act through conversation, real scenarios, and hands-on exploration. This is for everyone: attorneys, social workers, Tribal members, families, and anyone wanting to understand ICWA.</p>
     <div class="welcome-note">
@@ -333,7 +334,7 @@
 
     <div class="section-label">Real Scenarios</div>
     <div class="category-cards">
-      <div class="category-card card-hypo" onclick="openSection('hypo0')">
+      <div class="category-card card-hypo" onclick="openSectionWithWarning('hypo0')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
@@ -345,7 +346,7 @@
           <div class="card-status status-available" id="status-hypo0">Start</div>
         </div>
       </div>
-      <div class="category-card card-hypo" onclick="openSection('hypo1')">
+      <div class="category-card card-hypo" onclick="openSectionWithWarning('hypo1')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
@@ -357,7 +358,7 @@
           <div class="card-status status-available" id="status-hypo1">Start</div>
         </div>
       </div>
-      <div class="category-card card-hypo" onclick="openSection('hypo2')">
+      <div class="category-card card-hypo" onclick="openSectionWithWarning('hypo2')">
         <div class="card-inner">
           <div class="card-emoji">📂</div>
           <div class="card-content">
@@ -437,6 +438,7 @@
       <div style="font-size:48px;margin-bottom:12px;">🪶</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);margin-bottom:8px;">Your Badges</h2>
       <p style="font-size:14px;color:var(--light);line-height:1.5;" id="badge-count-text">0 of 12 earned</p>
+      <p id="badge-message" style="font-size:14px;color:var(--gold);line-height:1.6;margin-top:6px;"> Open your heart and mind and explore everything we have to offer, Young Elder.</p>
     </div>
     <div class="badges-grid" id="badges-grid"></div>
     <div class="perception-card" style="text-align:center;">
@@ -615,6 +617,37 @@
   </div>
 </div>
 
+<!-- ════════════ CONTENT WARNING MODAL ════════════ -->
+<div class="modal-overlay" id="content-warning-modal" onclick="closeContentWarning(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚠️ A Note Before You Begin</div>
+
+    <div class="modal-subtitle" style="padding:0 20px 10px;">
+      Please read before continuing
+    </div>
+
+    <div style="padding:0 20px 20px;font-size:14px;color:var(--light);line-height:1.6;">
+      The following scenarios are fictional and created for educational purposes.
+
+      <br><br>
+
+      However, they are based on real-world situations involving children, families, and Tribal communities.
+
+      <br><br>
+
+      These scenarios may involve sensitive topics related to child welfare and vulnerable populations. Viewer discretion is advised.
+
+      <br><br>
+
+      Please engage with care and respect for the real experiences these situations reflect.
+    </div>
+
+    <button class="btn-primary" onclick="proceedAfterWarning()">Continue</button>
+    <button class="modal-close" onclick="closeContentWarning()">Go Back</button>
+  </div>
+</div>
+
 <!-- ════════════ DEFINITION TOOLTIP ════════════ -->
 <div class="def-tooltip" id="def-tooltip">
   <button class="def-tooltip-close" onclick="closeTooltip()">×</button>
@@ -745,7 +778,11 @@ const definitions = {
   'Respondent': 'The person (usually a parent) who must respond to allegations in a court case.',
   'Petitioner': 'The party who files the case. In DN cases, usually the state or county child welfare department.',
   'member': 'When a child\'s Tribal status is in question, the state court should seek information from the relevant Tribe(s) and respect their enrollment records and criteria. Tribal membership is a political classification — it is the Tribe\'s determination to make, not the court\'s.',
-  'eligible for membership': 'Tribes retain the power to define membership. Courts cannot override or re-define a Tribe\'s enrollment standards. If a child may be eligible, treat the case as an ICWA case and contact the Tribe to verify.'
+  'eligible for membership': 'Tribes retain the power to define membership. Courts cannot override or re-define a Tribe\'s enrollment standards. If a child may be eligible, treat the case as an ICWA case and contact the Tribe to verify.',
+  'Permanency Plan': 'A plan for where a child will live long-term and who will provide stable care. In ICWA cases, permanency planning should protect the child’s connection to family, Tribe, and community.',
+  'Permanence Plan': 'Another way people may refer to a permanency plan. It means the long-term plan for a child’s safe, stable placement and future care.',
+  'Burdens of Proof': 'The standard the court uses to decide how much evidence is needed to take action. In ICWA cases, the burden increases depending on the decision: clear and convincing evidence is required for foster care placement, and beyond a reasonable doubt is required to terminate parental rights.',
+  'Tribal Resolution': 'A formal decision or statement adopted by a Tribal government. In ICWA cases, a Tribal resolution may express the Tribe’s position, such as supporting placement with a relative, asserting jurisdiction, or outlining cultural considerations for the child.',
 };
 
 // ══════════════════════ BADGES ══════════════════════
@@ -771,7 +808,12 @@ const timelineEvents = [
   { year: "1969–1974", title: 'Crisis Documented', desc: 'The Association on American Indian Affairs found that 25 to 35 percent of all Indian children were being removed from their homes. Of those, 85 percent were placed outside their communities.' },
   { year: "1974", title: 'Senate Hearings Begin', desc: 'The U.S. Senate held hearings on Indian child welfare. Tribal leaders testified about caseworkers who made removal decisions based on ignorance and bias.' },
   { year: "November 8, 1978", title: 'ICWA Becomes Law', desc: 'Congress passed the Indian Child Welfare Act, establishing minimum federal standards for state custody proceedings involving Indian children. Tribal courts gained jurisdiction.' },
-  { year: "1990's", title: 'Early ICWA Protocols Established', desc: 'Montana AG Opinion No. 15 required full faith and credit to Tribal court judgments in Indian child custody proceedings and mandated qualified expert witness testimony before terminating parental rights.' },
+  {
+  year: "1991",
+  title: "Montana AG Opinion No. 15",
+  desc: "Montana clarified how ICWA must be applied in practice.",
+  detail: "The Montana Office of the Attorney General established key ICWA protocols: Full faith and credit to Tribal court judgments, qualified expert witness testimony before termination of parental rights, deference to Tribal membership determinations, and active application of ICWA standards."
+  },
   { year: "1990's", title: 'Montana ICWA Enacted', desc: 'Montana adopted its own state ICWA, offering stronger protections in some areas and clarifying responsibilities of state agencies and courts.' },
   { year: "2016", title: 'BIA Final Rule', desc: 'The Bureau of Indian Affairs issued comprehensive federal regulations (25 CFR Part 23), standardizing how ICWA must be implemented by states.' },
   { year: "2018–2019", title: 'Constitutional Challenge', desc: 'In Brackeen v. Zinke, a federal judge struck down parts of ICWA. The Fifth Circuit reversed, finding ICWA is based on political classification, not race.' },
@@ -793,6 +835,11 @@ const sectionDialogues = {
       { text: "To represent the child in court like a lawyer", correct: false, feedback: "That role belongs to a Guardian ad Litem (GAL). The QEW provides expert testimony about the Tribe's cultural standards before the court can decide about foster care or ending parental rights." },
       { text: "To make the final decision about where the child goes", correct: false, feedback: "The judge makes the final decision. But the QEW must testify before the court can order foster care or terminate parental rights. Their testimony helps the court understand the Tribal context." }
     ]},
+    { guide: "Before we move on, there is an important point to remember: ICWA does not stop applying just because a case becomes a guardianship or adoption. Which statement is correct?", choices: [
+      { text: "ICWA only applies during foster care proceedings", correct: false, feedback: "Not quite. ICWA applies more broadly than foster care. It also applies in guardianships, pre-adoptive placements, and adoptions involving an Indian child." },
+      { text: "ICWA can still apply to guardianships and adoptions involving an Indian child", correct: true, feedback: "Exactly. ICWA is not limited to foster care. It also applies to guardianships, pre-adoptive placements, and adoptive placements involving an Indian child. Its protections continue throughout the life of the case." },
+      { text: "ICWA stops applying once parental rights are discussed", correct: false, feedback: "Actually, ICWA remains critically important when parental rights, guardianship, and adoption are at issue. Those are some of the most serious decisions a court can make." }
+    ]},
     { guide: "Let us talk about evidence standards. For foster care placement, the court needs 'clear and convincing evidence' plus QEW testimony. For termination of parental rights, it needs something even higher. What is the standard for TPR?", choices: [
       { text: "Beyond a reasonable doubt, the same standard used in criminal cases", correct: true, feedback: "Right. TPR under ICWA requires beyond a reasonable doubt — the highest standard in American law, the same used in criminal cases. Congress set this high bar because ending the parent-child relationship is one of the most serious actions a court can take." },
       { text: "Clear and convincing evidence, same as foster care", correct: false, feedback: "That is the standard for foster care, not TPR. For termination of parental rights, ICWA requires beyond a reasonable doubt — even higher. These higher bars exist to prevent unnecessary family separation." },
@@ -811,9 +858,9 @@ const sectionDialogues = {
   ],
   tribal: [
     { guide: "Welcome to the Tribal Government section. ICWA is based on a political relationship, not a racial one. Why is this distinction so important?", choices: [
-      { text: "Because Tribal membership is a political classification tied to sovereignty, like citizenship in a nation", correct: true, feedback: "Exactly. Tribes are sovereign nations with a government-to-government relationship with the United States. Tribal membership is a political classification, similar to citizenship. The Supreme Court confirmed this in Haaland v. Brackeen in 2023." },
-      { text: "Because it means ICWA only applies to some Indian people", correct: false, feedback: "The fundamental point is about political status. Tribal membership is a political classification based on sovereignty, not race. The Supreme Court upheld this in 2023." },
-      { text: "I am not sure why it matters", correct: false, feedback: "This is one of the most important things to understand. Tribal membership is political, not racial. The Supreme Court confirmed this in 2023 when it upheld ICWA 7-2. Understanding this protects ICWA from constitutional challenges." }
+      { text: "Because Tribal membership is a political classification tied to sovereignty and treaty relationships with the United States, like citizenship in a nation", correct: true, feedback: "Exactly. Tribes are sovereign nations with inherent authority that predates the United States. Their sovereignty is recognized through treaties and a government-to-government relationship. Tribal membership is a political classification, similar to citizenship. The Supreme Court confirmed this in Haaland v. Brackeen in 2023." },
+      { text: "Because it means ICWA only applies to some Indian people", correct: false, feedback: "Not quite. The key point is that Tribal membership is political, not racial. It is based on sovereignty and the government-to-government relationship between Tribes and the United States, not on who someone is racially." },
+      { text: "I am not sure why it matters", correct: false, feedback: "This distinction is critical. Tribal membership is a political classification tied to sovereignty and treaty relationships, not race. The Supreme Court confirmed this in 2023 when it upheld ICWA." }
     ]},
     { guide: "Each Tribe designates a specific person to receive ICWA notices — the ICWA Designated Agent. Why is proper notice to the Tribe so critical?", choices: [
       { text: "Because the Tribe has a right to know about the case and participate in decisions about their children", correct: true, feedback: "Correct. Notice is one of ICWA's core protections. Without it, the Tribe cannot intervene, request transfer, participate in placement decisions, or provide a QEW. If notice was not properly given, the entire proceeding can be invalidated." },
@@ -824,6 +871,11 @@ const sectionDialogues = {
       { text: "When the child lives on or is domiciled on the reservation, or is a ward of the Tribal court", correct: true, feedback: "Right. In these situations, the state court cannot hear the case at all. This reflects the principle that Tribes are best positioned to make decisions about their own Indian children within their own territory." },
       { text: "Tribal courts always have exclusive jurisdiction over Indian children", correct: false, feedback: "Not quite. Exclusive jurisdiction applies when the child lives on or is domiciled on the reservation, or is a ward of the Tribal court. For off-reservation Indian children, jurisdiction may be concurrent." },
       { text: "Only when both parents are Tribal members", correct: false, feedback: "Jurisdiction depends on where the child lives or is domiciled, not on both parents being members." }
+    ]},
+    { guide: "A Tribe submits a Tribal Resolution to the court stating that a child should be placed with extended family. What does this represent?", choices: [
+      { text: "A suggestion the court can ignore if it disagrees", correct: false, feedback: "Not quite. While courts ultimately make decisions, a Tribal resolution represents the Tribe’s sovereign position and should be taken seriously, especially under ICWA’s requirements for Tribal involvement." },
+      { text: "The Tribe’s formal position based on its sovereign authority", correct: true, feedback: "Correct. A Tribal resolution reflects the Tribe’s official position as a sovereign government. Under ICWA, Tribal input is essential and must be meaningfully considered by the court." },
+      { text: "A document only used in Tribal court, not state court", correct: false, feedback: "Actually, Tribal resolutions can be submitted in state court proceedings. They are an important way Tribes communicate their position in ICWA cases." }
     ]},
     { guide: "Tribes can also establish their own placement preferences by Tribal resolution. Why would a Tribe do this?", choices: [
       { text: "To reflect the Tribe's own cultural values, family structures, and community standards", correct: true, feedback: "Exactly. ICWA allows Tribes to establish different placement preferences by resolution. Each Tribe has unique culture and family structures. This is Tribal sovereignty in action." },
@@ -841,6 +893,11 @@ const sectionDialogues = {
       { text: "Active efforts is a higher standard that requires hands-on help, not just making referrals", correct: true, feedback: "Correct. Active efforts goes beyond providing a list of services. It means actively helping the family: driving them to appointments, helping find housing, connecting with culturally relevant programs. The difference is between handing someone a map and walking with them." },
       { text: "They are basically the same thing", correct: false, feedback: "They are not. Reasonable efforts generally means offering services and referrals. Active efforts is a higher bar — it means actively helping the Indian family, not just pointing them toward resources." },
       { text: "Active efforts means the family has to do more work", correct: false, feedback: "Actually the opposite. Active efforts places the greater responsibility on the department. The work falls on the system, not the family." }
+    ]},
+    { guide: "In ICWA cases, who is responsible for making sure the state has met its burden, including providing Active Efforts, before removing a child or keeping them out of the home?", choices: [
+      { text: "The parents, because they must prove they deserve to keep custody", correct: false, feedback: "Not quite. Under ICWA, the burden is not on the parents. The state must prove it has made Active Efforts and met the higher legal standard required by law." },
+      { text: "The judge, who must hold the state accountable and make sure it has met ICWA’s higher requirements, including Active Efforts", correct: true, feedback: "Exactly. ICWA places a higher burden on the state, including the requirement to provide Active Efforts. The judge is responsible for making sure the state actually meets that burden before approving removal or continued placement." },
+      { text: "The Tribe alone, because only the Tribe decides whether Active Efforts were enough", correct: false, feedback: "The Tribe plays a critical role, but the judge is responsible for applying the law. The court must ensure the state has made Active Efforts and met ICWA’s requirements." }
     ]},
     { guide: "When an Indian child cannot stay with their parents, ICWA spells out placement preferences. For foster care, what is the preferred order?", choices: [
       { text: "Extended family, then a Tribal foster home, then an Indian foster home, then a tribally approved institution", correct: true, feedback: "That is the correct order. Each option must be considered in order before moving to the next." },
@@ -895,7 +952,7 @@ const sectionDialogues = {
 // ══════════════════════ HYPOTHETICALS ══════════════════════
 const hypoDialogues = [
   [
-    { guide: "Let me tell you about A.N. He is 7 years old and affiliated with the Blackfeet Tribe. He was removed from his mother due to substance use and homelessness. He has been in foster care for 12 months with a non-Indian, non-kin family. His mother has a large extended family, but the Department has not explored any of them. Now they have filed a permanency plan with a concurrent plan of adoption by the foster family. What is the first ICWA concern you notice?", choices: [
+    { guide: "Let me tell you about A.N. He is 7 years old and affiliated with the Blackfeet Tribe. He was removed from his mother due to substance use and houselessness. He has been in foster care for 12 months with a non-Indian, non-kin family. His mother has a large extended family, but the Department has not explored any of them. Now they have filed a permanency plan with a concurrent plan of adoption by the foster family. What is the first ICWA concern you notice?", choices: [
       { text: "The Department has not explored placement with A.N.'s extended family, violating placement preferences", correct: true, feedback: "That is the biggest red flag. ICWA placement preferences put extended family first. The Department has not even explored whether any of them could provide placement. Skipping this step is a serious ICWA violation." },
       { text: "The father should have been contacted first", correct: false, feedback: "Contacting the father is important, but the most immediate concern is that the Department failed to explore extended family placement at all during 12 months." },
       { text: "Twelve months in foster care is too long", correct: false, feedback: "The length is concerning, but the core issue is that during those 12 months, the Department failed to search for extended family or preferred placements." }
@@ -905,11 +962,11 @@ const hypoDialogues = [
       { text: "Just sending the Tribe the paperwork about the case", correct: false, feedback: "Consultation means active engagement, not just sending papers. It requires working together to identify Indian family, services, and plans." },
       { text: "Asking the Tribe if they want to take over the case", correct: false, feedback: "Consultation is broader than offering to hand off the case. It should include identifying family placements, services, and planning together." }
     ]},
-    { guide: "The permanency plan proposes adoption by the non-Indian foster family. Under ICWA, what must be true for this to go forward?", choices: [
-      { text: "The Department must show good cause to deviate from placement preferences and prove a diligent search was done", correct: true, feedback: "Exactly. Since the Department never explored extended family, they cannot claim preferred placements are unavailable. This permanency plan has serious ICWA problems." },
-      { text: "The foster family just needs to have bonded with the child", correct: false, feedback: "Bonding does not override ICWA placement preferences. A bond that formed because the Department failed to follow ICWA is not good cause." },
-      { text: "Nothing special, adoption is the best outcome for Indian children in foster care", correct: false, feedback: "In ICWA cases, adoption must follow placement preferences. Best interest includes maintaining cultural and family connections." }
-    ]}
+{ guide: "The permanency plan proposes adoption by the non-Indian foster family. A.N. has now bonded with them after 12 months in placement. Under ICWA, what must be shown before this can go forward?", choices: [
+    { text: "The Department must show good cause to deviate from ICWA placement preferences and prove a diligent search was done for preferred placements", correct: true, feedback: "Exactly. Under ICWA, adoption must follow placement preferences unless the Department can show good cause to depart from them. That also requires proof that a diligent search was made for extended family and other preferred placements. Since extended family was never explored here, the permanency plan has serious ICWA problems. A bond that formed after failing to follow ICWA does not excuse that failure." },
+    { text: "The foster family just needs to have bonded with the child", correct: false, feedback: "Bonding alone does not override ICWA placement preferences. Especially where the Department failed to follow ICWA, a bond that formed in that placement cannot be used as justification to stay outside preferred placements." },
+    { text: "Nothing special, adoption is the best outcome for Indian children in foster care", correct: false, feedback: "Not quite. ICWA requires that adoption follow placement preferences unless there is legally sufficient good cause to deviate. The Department must also show it conducted a diligent search. Best interest under ICWA includes maintaining family, Tribal, and cultural connections." }
+  ]}
   ],
   [
     { guide: "Meet E.L. He is 4 years old and an enrolled Crow Tribe member. He was removed from his mother. His father, D.T., lives nearby in a studio apartment, works early morning shifts, is steadily employed, and has no CPS history. Despite this, the Department is refusing placement with D.T., citing work hours and apartment size. What is the ICWA issue?", choices: [
@@ -973,7 +1030,7 @@ const caseBuilderSteps = [
     ]
   },
   { num: 'Step 6', title: 'Qualified Expert Witness', text: 'Before the court can order foster care, a QEW must testify that continued custody is likely to cause serious harm to the Indian child. Work with the Tribe to identify an appropriate QEW.', action: false },
-  { num: 'Step 7', title: 'Ongoing Compliance', text: 'ICWA compliance is not a one-time checklist. Continue active efforts, maintain Tribal consultation, follow placement preferences, and ensure every hearing considers ICWA requirements.', action: false },
+  { num: 'Step 7', title: 'Ongoing Compliance', text: 'ICWA compliance is not a one-time checklist. Continued active efforts, maintain Tribal consultation, follow placement preferences, and ensure every hearing considers ICWA requirements.', action: false },
   { num: 'Step 8', title: 'Permanency Planning', text: 'If reunification is not possible, any permanency plan must follow ICWA adoptive placement preferences. Good cause must be documented to deviate. The Tribe must be consulted.', action: false },
   {
     num: 'Action',
@@ -1014,10 +1071,21 @@ function finishPerception() { awardBadge('perception'); showScreen('screen-timel
 function renderTimeline() {
   const c = document.getElementById('timeline-container');
   if (c.children.length > 0) return;
+
   timelineEvents.forEach(evt => {
     const div = document.createElement('div');
     div.className = 'tl-item';
-    div.innerHTML = `<div class="tl-dot">◆</div><div class="tl-year">${evt.year}</div><div class="tl-text">${evt.title}</div><div class="tl-tap">Tap to learn more</div><div class="tl-detail">${evt.desc}</div>`;
+
+    const detailText = evt.detail ? evt.detail : evt.desc;
+
+    div.innerHTML = `
+      <div class="tl-dot">◆</div>
+      <div class="tl-year">${evt.year}</div>
+      <div class="tl-text">${evt.title}</div>
+      <div class="tl-tap">Tap to learn more</div>
+      <div class="tl-detail">${detailText}</div>
+    `;
+
     div.addEventListener('click', () => div.classList.toggle('expanded'));
     c.appendChild(div);
   });
@@ -1087,6 +1155,7 @@ function awardBadge(id) {
   document.getElementById('popup-badge-name').textContent = badge.name;
   document.getElementById('popup-badge-desc').textContent = badge.desc;
   document.getElementById('badge-popup').classList.add('show');
+  updateBadgeMessage();
 }
 function closeBadgePopup() { document.getElementById('badge-popup').classList.remove('show'); }
 
@@ -1113,6 +1182,7 @@ function doReset() {
   state.currentStep = 0; state.dialogueHistory = []; state.results = []; state.defLookupCount = 0;
   const tl = document.getElementById('timeline-container'); if (tl) tl.innerHTML = '';
   closeResetModal(); showScreen('screen-hub');
+  updateBadgeMessage();
 }
 
 // ══════════════════════ EXPLORE MORE MODAL ══════════════════════
@@ -1260,10 +1330,24 @@ function getDialogueData() {
   return sectionDialogues[state.currentSection] || [];
 }
 
+// ══════════════════════ Question Counter ══════════════════════
+function getQuestionNumber() {
+  const data = getDialogueData();
+  if (!data || !Array.isArray(data)) return 1;
+
+  let count = 0;
+  for (let i = 0; i <= state.currentStep; i++) {
+    if (data[i] && data[i].choices) count++;
+  }
+
+  return count > 0 ? count : 1;
+}
+
 function renderStep() {
   const data = getDialogueData();
-  if (state.currentStep >= data.length) { showResults(); return; }
+  if (state.currentStep > data.length) { showResults(); return; }
   const step = data[state.currentStep];
+  const questionNumber = getQuestionNumber();
   const total = data.length;
   document.getElementById('dialogue-progress').style.width = ((state.currentStep) / total * 100) + '%';
   document.getElementById('dialogue-progress-text').textContent = (state.currentStep + 1) + '/' + total;
@@ -1279,7 +1363,7 @@ function renderStep() {
     area.innerHTML += `<div class="msg ${h.wasCorrect ? 'msg-success' : 'msg-wrong'}">${insertDefs(h.feedback)}</div>`;
   });
 
-  area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble">${insertDefs(step.guide)}</div></div>`;
+  area.innerHTML += `<div class="msg msg-guide"><div class="guide-avatar">🪶</div><div class="msg-bubble"><strong>Question ${questionNumber}.</strong><br>${insertDefs(step.guide)}</div></div>`;
 
   step.choices.forEach((c, i) => {
     const btn = document.createElement('button');
@@ -1305,28 +1389,64 @@ function handleChoice(idx) {
     if (i === idx && !choice.correct) btn.classList.add('wrong');
   });
 
-  state.dialogueHistory.push({ guide: step.guide, chosen: choice.text, wasCorrect: choice.correct, feedback: choice.feedback });
-  state.results.push({ q: step.guide.substring(0, 100) + '...', chosen: choice.text, correct: choice.correct, correctText: step.choices.find(c => c.correct).text });
+  state.dialogueHistory.push({
+    guide: step.guide,
+    chosen: choice.text,
+    wasCorrect: choice.correct,
+    feedback: choice.feedback
+  });
 
-  if (!state.currentSection.startsWith('hypo') && state.sectionProgress[state.currentSection] !== undefined)
+  state.results.push({
+    q: step.guide.substring(0, 100) + '...',
+    chosen: choice.text,
+    correct: choice.correct,
+    correctText: step.choices.find(c => c.correct).text
+  });
+
+  if (!state.currentSection.startsWith('hypo') && state.sectionProgress[state.currentSection] !== undefined) {
     state.sectionProgress[state.currentSection] = Math.round(((state.currentStep + 1) / data.length) * 100);
-
+  }
 
   saveSession(state.currentSection);
 
   setTimeout(() => {
+    // Show the selected answer immediately in blue
+    const answer = document.createElement('div');
+    answer.className = 'msg msg-user';
+    answer.innerHTML = `<div class="msg-bubble">${choice.text}</div>`;
+    area.appendChild(answer);
+
+    // Then show feedback
     const fb = document.createElement('div');
     fb.className = 'msg ' + (choice.correct ? 'msg-success' : 'msg-wrong');
     fb.innerHTML = insertDefs(choice.feedback);
     area.appendChild(fb);
-    requestAnimationFrame(() => requestAnimationFrame(() => { area.scrollTop = area.scrollHeight + 999; }));
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      area.scrollTop = area.scrollHeight + 999;
+    }));
 
     setTimeout(() => {
       bar.innerHTML = '';
       const cont = document.createElement('button');
       cont.className = 'continue-btn';
-      cont.textContent = state.currentStep < data.length - 1 ? 'Continue →' : 'See Results';
-      cont.onclick = () => { state.currentStep++; saveSession(state.currentSection); renderStep(); };
+
+      if (state.currentStep < data.length - 1) {
+        cont.textContent = 'Continue →';
+        cont.onclick = () => {
+          state.currentStep++;
+          saveSession(state.currentSection);
+          renderStep();
+        };
+      } else {
+        cont.textContent = 'See Results';
+        cont.onclick = () => {
+          state.currentStep++;
+          saveSession(state.currentSection);
+          showResults();
+        };
+      }
+
       bar.appendChild(cont);
     }, 200);
   }, 150);
@@ -1340,12 +1460,45 @@ function exitDialogue() {
 }
 
 // ══════════════════════ RESULTS ══════════════════════
+
+function buildReviewHTML() {
+  if (!state.dialogueHistory || state.dialogueHistory.length === 0) {
+    return `<div class="perception-card"><p>No review data available yet.</p></div>`;
+  }
+
+  return state.dialogueHistory.map((item, index) => `
+    <div class="perception-card" style="text-align:left;">
+      <div style="font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">
+        Question ${index + 1}
+      </div>
+
+      <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--cream); margin-bottom:10px; line-height:1.5;">
+        ${insertDefs(item.guide)}
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--light); margin-bottom:4px;">
+          Your Answer
+        </div>
+        <div class="msg msg-user" style="max-width:100%;">
+          <div class="msg-bubble">${insertDefs(item.chosen)}</div>
+        </div>
+      </div>
+
+      <div class="${item.wasCorrect ? 'msg-success' : 'msg-wrong'}" style="max-width:100%;">
+        ${insertDefs(item.feedback)}
+      </div>
+    </div>
+  `).join('');
+}
 function showResults() {
   const section = state.currentSection;
   const correct = state.results.filter(r => r.correct).length;
   const total = state.results.length;
   const pct = Math.round((correct / total) * 100);
   const passed = pct >= 80;
+
+  const reviewHTML = buildReviewHTML();
 
   clearSession(section);
 
@@ -1354,7 +1507,9 @@ function showResults() {
     state.sectionDone[section] = true;
   } else if (sectionDialogues[section]) {
     if (passed) {
-      awardBadge(section); state.sectionDone[section] = true; state.sectionProgress[section] = 100;
+      awardBadge(section);
+      state.sectionDone[section] = true;
+      state.sectionProgress[section] = 100;
       const mainSections = ['courthouse', 'tribal', 'household', 'court-knowledge'];
       if (mainSections.every(s => state.sectionDone[s])) awardBadge('all-sections');
     } else {
@@ -1363,9 +1518,19 @@ function showResults() {
   }
 
   let headline, icon, msg;
-  if (pct === 100) { icon = '🌟'; headline = 'Perfect Score!'; msg = 'You got every single one right. Excellent understanding.'; }
-  else if (passed) { icon = '✅'; headline = 'Section Complete'; msg = 'Good work. Review any missed items below to strengthen your knowledge.'; }
-  else { icon = '📋'; headline = 'Keep Going'; msg = 'A great start. Score 80% or higher to earn your badge for this section.'; }
+  if (pct === 100) {
+    icon = '🌟';
+    headline = 'Perfect Score!';
+    msg = 'You got every single one right. Excellent understanding.';
+  } else if (passed) {
+    icon = '✅';
+    headline = 'Section Complete';
+    msg = 'Good work. Review any missed items below to strengthen your knowledge.';
+  } else {
+    icon = '📋';
+    headline = 'Keep Going';
+    msg = 'A great start. Score 80% or higher to earn your badge for this section.';
+  }
 
   const retryNudge = (!section.startsWith('hypo') && !passed) ? `
     <div class="retry-nudge">
@@ -1379,20 +1544,34 @@ function showResults() {
     <h2 class="results-title">${headline}</h2>
     <p class="results-subtitle">${correct} of ${total} correct — ${pct}%</p>
     ${retryNudge}
+
     <div class="results-score">
       <div class="score-row"><span class="score-label">Questions</span><span class="score-val">${total}</span></div>
       <div class="score-row"><span class="score-label">Correct</span><span class="score-val" style="color:var(--success)">${correct}</span></div>
       <div class="score-row"><span class="score-label">Missed</span><span class="score-val" style="color:${total-correct>0?'var(--red)':'var(--light)'}">${total-correct}</span></div>
     </div>
+
     <div style="margin-bottom:12px;font-size:14px;color:var(--light);text-align:center;">${msg}</div>
+
     ${state.results.filter(r => !r.correct).map(r => `
       <div class="review-item missed">
         <div class="review-item-q">${r.q}</div>
         <div class="review-item-a">✓ Correct answer: ${r.correctText}</div>
-      </div>`).join('')}
+      </div>
+    `).join('')}
+
+    <div class="perception-card" style="margin-top:18px;">
+      <div class="card-title" style="text-align:center;">Full Review</div>
+      <p style="text-align:center; margin-bottom:12px;">
+        Here is every question, your answer, and the explanation.
+      </p>
+      ${reviewHTML}
+    </div>
+
     <button class="btn-primary" onclick="showScreen('screen-hub')" style="margin-top:20px;margin-bottom:10px;">Back to Home</button>
     <button class="btn-secondary" onclick="retrySection()" style="margin-bottom:10px;">↺ Retry This Section</button>
   `;
+
   showScreen('screen-results');
 }
 
@@ -1426,6 +1605,51 @@ function showCaseBuilder() {
   bar.appendChild(btn);
 
   requestAnimationFrame(() => requestAnimationFrame(() => { area.scrollTop = 0; }));
+}
+
+// ══════════════════════ Badge Message ══════════════════════
+function updateBadgeMessage() {
+  const earnedCount = Object.keys(state.badges).length;
+  const msgEl = document.getElementById('badge-message');
+
+  if (!msgEl) return;
+
+  let message = "";
+
+  if (earnedCount <= 2) {
+    message = "Open your heart and mind and explore everything we have to offer, Young Elder.";
+  } else if (earnedCount <= 5) {
+    message = "Wonderful efforts, Young Elder! Keep going!";
+  } else if (earnedCount <= 8) {
+    message = "You are walking a strong path, Young Elder. Your understanding is growing.";
+  } else if (earnedCount <= 11) {
+    message = "Your dedication honors the journey, Young Elder. You are nearly there.";
+  } else {
+    message = "You carry this knowledge forward now, Young Elder. Well done.";
+  }
+
+  msgEl.textContent = message;
+}
+
+let pendingSection = null;
+
+function openSectionWithWarning(sectionKey) {
+  pendingSection = sectionKey;
+  document.getElementById('content-warning-modal').classList.add('show');
+}
+
+function proceedAfterWarning() {
+  document.getElementById('content-warning-modal').classList.remove('show');
+  if (pendingSection) {
+    openSection(pendingSection);
+    pendingSection = null;
+  }
+}
+
+function closeContentWarning(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('content-warning-modal').classList.remove('show');
+  pendingSection = null;
 }
 
 renderHub();
