@@ -215,7 +215,7 @@
   <div class="topbar"><span class="topbar-title">Before We Begin</span><div></div></div>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:40px;">
     <div class="perception-card">
-      <p style="text-align: center;">These answers are not recorded. There are no wrong answers.</p>
+      <p style="text-align: center;">These answers are recorded anonymously. Answer however you feel most comfortable.</p>
     </div>
     <div class="perception-card">
       <div class="card-title">How familiar are you with ICWA?</div>
@@ -223,6 +223,7 @@
         <button class="level-btn" onclick="setPerception(0,this)">Just Getting Started</button>
         <button class="level-btn" onclick="setPerception(0,this)">I Know a Little</button>
         <button class="level-btn" onclick="setPerception(0,this)">Pretty Familiar</button>
+        <button class="level-btn" onclick="setPerception(0,this)">N/A</button>
       </div>
     </div>
     <div class="perception-card">
@@ -232,6 +233,35 @@
         <button class="level-btn" onclick="setPerception(1,this)">Personal / Family</button>
         <button class="level-btn" onclick="setPerception(1,this)">School / Learning</button>
         <button class="level-btn" onclick="setPerception(1,this)">Community / Tribal</button>
+        <button class="level-btn" onclick="setPerception(1,this)">N/A</button>
+      </div>
+    </div>
+      <div class="perception-card">
+      <div class="card-title">What best describes your role?</div>
+      <div class="level-selector">
+        <button class="level-btn" onclick="setPerception(2,this)">Parent/family member</button>
+        <button class="level-btn" onclick="setPerception(2,this)">Professional (e.g., attorney, social worker)</button>
+        <button class="level-btn" onclick="setPerception(2,this)">Tribal member</button>
+        <button class="level-btn" onclick="setPerception(2,this)">student</button>
+        <button class="level-btn" onclick="setPerception(2,this)">N/A</button>
+      </div>
+    </div>
+        <div class="perception-card">
+      <div class="card-title">Has ICWA effected you personally?</div>
+      <div class="level-selector">
+        <button class="level-btn" onclick="setPerception(3,this)">yes</button>
+        <button class="level-btn" onclick="setPerception(3,this)">no</button>
+        <button class="level-btn" onclick="setPerception(3,this)">N/A</button>
+      </div>
+    </div>
+        <div class="perception-card">
+      <div class="card-title">How confident are you in navigating ICWA right now ?</div>
+      <div class="level-selector">
+        <button class="level-btn" onclick="setPerception(4,this)">not</button>
+        <button class="level-btn" onclick="setPerception(4,this)">slightly</button>
+        <button class="level-btn" onclick="setPerception(4,this)">moderately</button>
+        <button class="level-btn" onclick="setPerception(4,this)">very</button>
+        <button class="level-btn" onclick="setPerception(4,this)">N/A</button>
       </div>
     </div>
     <div style="padding:20px 16px;text-align:center;">
@@ -535,6 +565,14 @@
         </div>
         <div class="resource-arrow">↗</div>
       </a>
+      <a class="resource-link" href="https://tribalinformationexchange.org/index.php/icwa/" target="_blank" rel="noopener noreferrer">
+        <div class="resource-icon">💬</div>
+        <div class="resource-info">
+          <div class="resource-name">Tribal Information Exchange — ICWA</div>
+          <div class="resource-desc">Resources, guides, and tools to help Tribal leaders and child welfare professionals understand and implement ICWA..</div>
+        </div>
+        <div class="resource-arrow">↗</div>
+      </a>
     </div>
 
     <!-- ── Outreach panel ── -->
@@ -808,13 +846,14 @@ const timelineEvents = [
   { year: "1969–1974", title: 'Crisis Documented', desc: 'The Association on American Indian Affairs found that 25 to 35 percent of all Indian children were being removed from their homes. Of those, 85 percent were placed outside their communities.' },
   { year: "1974", title: 'Senate Hearings Begin', desc: 'The U.S. Senate held hearings on Indian child welfare. Tribal leaders testified about caseworkers who made removal decisions based on ignorance and bias.' },
   { year: "November 8, 1978", title: 'ICWA Becomes Law', desc: 'Congress passed the Indian Child Welfare Act, establishing minimum federal standards for state custody proceedings involving Indian children. Tribal courts gained jurisdiction.' },
+  
+  { year: "1990's", title: 'Montana ICWA Enacted', desc: 'Montana adopted its own state ICWA, offering stronger protections in some areas and clarifying responsibilities of state agencies and courts.' },
   {
   year: "1991",
   title: "Montana AG Opinion No. 15",
   desc: "Montana clarified how ICWA must be applied in practice.",
   detail: "The Montana Office of the Attorney General established key ICWA protocols: Full faith and credit to Tribal court judgments, qualified expert witness testimony before termination of parental rights, deference to Tribal membership determinations, and active application of ICWA standards."
   },
-  { year: "1990's", title: 'Montana ICWA Enacted', desc: 'Montana adopted its own state ICWA, offering stronger protections in some areas and clarifying responsibilities of state agencies and courts.' },
   { year: "2016", title: 'BIA Final Rule', desc: 'The Bureau of Indian Affairs issued comprehensive federal regulations (25 CFR Part 23), standardizing how ICWA must be implemented by states.' },
   { year: "2018–2019", title: 'Constitutional Challenge', desc: 'In Brackeen v. Zinke, a federal judge struck down parts of ICWA. The Fifth Circuit reversed, finding ICWA is based on political classification, not race.' },
   { year: "June 2023", title: 'Supreme Court Upholds ICWA', desc: 'In Haaland v. Brackeen, the Supreme Court ruled 7-2 to uphold ICWA, confirming it is based on the political status of Tribal members, not race.' },
@@ -1060,12 +1099,33 @@ function showScreen(id) {
   if (id === 'screen-timeline') renderTimeline();
 }
 
+const perceptionAnswers = [];
+
 function setPerception(idx, btn) {
-  btn.parentElement.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+  btn.parentElement.querySelectorAll('.level-btn')
+    .forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  perceptionAnswers[idx] = btn.textContent.trim();
 }
 
-function finishPerception() { awardBadge('perception'); showScreen('screen-timeline'); }
+function finishPerception() {
+  const answers = {
+    familiarity: perceptionAnswers[0] || 'No answer',
+    reason:      perceptionAnswers[1] || 'No answer',
+    role:        perceptionAnswers[2] || 'No answer',
+    affected:    perceptionAnswers[3] || 'No answer',
+    confidence:  perceptionAnswers[4] || 'No answer'
+  };
+
+  fetch("https://formspree.io/f/xdaverza", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(answers)
+  }).catch(err => console.error("Survey error:", err));
+
+  awardBadge('perception');
+  showScreen('screen-timeline');
+}
 
 // ══════════════════════ TIMELINE ══════════════════════
 function renderTimeline() {
